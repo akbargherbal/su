@@ -1,9 +1,6 @@
 *.pyc
 __pycache__/
-LESSONS/
-.DS_Store" > .gitignore
-git add .gitignore && git commit -m "add gitignore"
-git push
+.DS_Store
 
 node_modules/
 **/node_modules/
