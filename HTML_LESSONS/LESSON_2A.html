@@ -1,17 +1,16 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+
+<html dir="rtl" lang="ar">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>درس جسد الصوت وكثافته — الجسد (The Body: Frequency & Weight)</title>
-
-  <!-- Google Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;1,9..144,300&family=JetBrains+Mono:wght@400;500&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
-  <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet" />
-
-  <style>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>درس جسد الصوت وكثافته — الجسد (The Body: Frequency &amp; Weight)</title>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;1,9..144,300&amp;family=JetBrains+Mono:wght@400;500&amp;family=DM+Sans:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400;1,700&amp;display=swap" rel="stylesheet"/>
+<style>
     /* ── Reset & base ──────────────────────────────────────── */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -587,60 +586,77 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 .codehilite .il { color: #D19A66 } /* Literal.Number.Integer.Long */
 
 
-  </style>
+  
+    /* ── Lyrics card (audio + verse block) ──────────────────── */
+    .lyrics-card {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+      margin: 2rem 0;
+    }
+    .lyrics-card audio {
+      display: block;
+      width: 100%;
+      background: var(--surface2);
+      padding: 0.75rem 1rem;
+      margin: 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .lyrics-card pre {
+      margin: 0 !important;
+      border-radius: 0 !important;
+      border-top: none;
+    }
+</style>
 </head>
 <body>
-
 <div id="progress"></div>
-
 <!-- Sidebar -->
-<nav id="sidebar" aria-label="Table of contents">
-  <div id="sidebar-title">Contents</div>
-  <ul id="toc"></ul>
+<nav aria-label="Table of contents" id="sidebar">
+<div id="sidebar-title">Contents</div>
+<ul id="toc"></ul>
 </nav>
-
-<button id="sidebar-toggle" aria-label="Toggle sidebar">☰ TOC</button>
-
+<button aria-label="Toggle sidebar" id="sidebar-toggle">☰ TOC</button>
 <!-- Main -->
 <div id="main">
-  <article>
-    <header id="doc-header">
-      <h1 id="doc-title">درس جسد الصوت وكثافته — الجسد (The Body: Frequency & Weight)</h1>
-      <div id="doc-meta"></div>
-    </header>
-
-    <h1 id="the-body-frequency-weight">درس جسد الصوت وكثافته — الجسد (The Body: Frequency &amp; Weight)</h1>
+<article>
+<header id="doc-header">
+<h1 id="doc-title">درس جسد الصوت وكثافته — الجسد (The Body: Frequency &amp; Weight)</h1>
+<div id="doc-meta"></div>
+</header>
+<h1 id="the-body-frequency-weight">درس جسد الصوت وكثافته — الجسد (The Body: Frequency &amp; Weight)</h1>
 <h3 id="_1">💡 مقدمة الدرس</h3>
-<p>يتناول هذا الدرس مفهوم &ldquo;الترددات&rdquo; (Frequencies) وكيف تتحكم في كثافة الصوت ووزنه (The Body). كل صوت يتكون من طبقات (منخفضة، متوسطة، وعالية)، وأي خلل في هذه الترددات يؤدي إلى مشاكل هندسية مزعجة:</p>
+<p>يتناول هذا الدرس مفهوم “الترددات” (Frequencies) وكيف تتحكم في كثافة الصوت ووزنه (The Body). كل صوت يتكون من طبقات (منخفضة، متوسطة، وعالية)، وأي خلل في هذه الترددات يؤدي إلى مشاكل هندسية مزعجة:</p>
 <ul>
 <li><strong>الصوت النحيف أو الخافت (Thin / Hollow / Dry):</strong> يحدث عندما يفتقر الصوت للترددات المنخفضة — غياب منطقة الصدر في الصوت. يبدو المغني ضعيفاً وكأنه يتحدث من هاتف قديم.</li>
 <li><strong>الصوت الموحل أو الغائم (Muddy / Smeared / Wooly):</strong> يحدث عندما تتراكم الآلات الموسيقية بكثرة في الترددات المنخفضة والمتوسطة، فيبدو الصوت مكتوماً كأن غطاءً صوفياً وُضع فوق السماعات، وتضيع الكلمات في وحل الضجيج.</li>
 <li><strong>الصوت الصاخب أو الحاد (Bright / Harsh + Sibilance):</strong> يحدث عند المبالغة في الترددات العالية، مما يؤدي إلى مشكلة تُعرف بـ (Sibilance)، حيث تصبح حروف (السين والشين) حادة جداً ومؤذية للأذن.</li>
 <li><strong>الدفء (Warm):</strong> الحالة المتوازنة التي يسعى إليها المنتج — رنين الصدر دون ثقل، وحضور دون إيذاء.</li>
 </ul>
-<hr>
+<hr/>
 <h3 id="_2">🎼 البحر الشعري المختار</h3>
 <p>تم نظم هذا الدرس على <strong>(بحر الكَامِل التام)</strong>.</p>
-<p>يمتاز هذا البحر بتفعيلته الثلاثية القوية والغنية التي تمنح اللحن &ldquo;ثِقَلاً&rdquo; موسيقياً وحضوراً. هذا الوزن الصارم سيبرز التناقض بوضوح عندما تُجبر أداة التوليد الموسيقي على غنائه بصوت خافت وضعيف، أو بصوت غائم وموحل.</p>
-<hr>
+<p>يمتاز هذا البحر بتفعيلته الثلاثية القوية والغنية التي تمنح اللحن “ثِقَلاً” موسيقياً وحضوراً. هذا الوزن الصارم سيبرز التناقض بوضوح عندما تُجبر أداة التوليد الموسيقي على غنائه بصوت خافت وضعيف، أو بصوت غائم وموحل.</p>
+<hr/>
 <h3 id="_3">💡 الدلالات التعليمية في القصيدة</h3>
 <ul>
 <li><strong>المقدمة:</strong> تطرح السؤال الأساسي عن وزن الجسد الصوتي وما يسحقه.</li>
-<li><strong>المقطع 1:</strong> يعالج مشكلة <strong>الصوت النحيف (Thin/Dry)</strong> — &ldquo;غَابَ صَدْرُ الصَّوْتِ&rdquo; و&rdquo;نَحِيفاً كَالْهَوَاتِفِ&rdquo;.</li>
-<li><strong>المقطع 2:</strong> يعالج مشكلة <strong>الصوت الموحل (Muddy/Smeared)</strong> — &ldquo;أَوْحَالُهُ&rdquo; و&rdquo;كَمَكْسُوٍّ بِصُوفٍ مُعْتِمِ&rdquo;.</li>
-<li><strong>المقطع 3:</strong> يعالج مشكلة <strong>السين الحادة (Harsh Sibilance)</strong> — &ldquo;حَرْفٌ تَحَوَّلَ &hellip; أَسْيُفَا&rdquo; و&rdquo;سِينُ الْكَلَامِ وَشِينُهُ&rdquo;.</li>
-<li><strong>اللازمة:</strong> تكرر السؤال عن &ldquo;الأوزان&rdquo; داخل المسمع لتعزيز الوعي بالترددات.</li>
-<li><strong>الخاتمة:</strong> تقدم الحل — &ldquo;صَدَى الصَّدْرِ الرَّنِينِ مُهَذَّبًا&rdquo; و&rdquo;هَيْكَلًا مُتَوَازِنًا&rdquo; يمثل الـ <strong>Warm Balanced</strong> sound.</li>
+<li><strong>المقطع 1:</strong> يعالج مشكلة <strong>الصوت النحيف (Thin/Dry)</strong> — “غَابَ صَدْرُ الصَّوْتِ” و”نَحِيفاً كَالْهَوَاتِفِ”.</li>
+<li><strong>المقطع 2:</strong> يعالج مشكلة <strong>الصوت الموحل (Muddy/Smeared)</strong> — “أَوْحَالُهُ” و”كَمَكْسُوٍّ بِصُوفٍ مُعْتِمِ”.</li>
+<li><strong>المقطع 3:</strong> يعالج مشكلة <strong>السين الحادة (Harsh Sibilance)</strong> — “حَرْفٌ تَحَوَّلَ … أَسْيُفَا” و”سِينُ الْكَلَامِ وَشِينُهُ”.</li>
+<li><strong>اللازمة:</strong> تكرر السؤال عن “الأوزان” داخل المسمع لتعزيز الوعي بالترددات.</li>
+<li><strong>الخاتمة:</strong> تقدم الحل — “صَدَى الصَّدْرِ الرَّنِينِ مُهَذَّبًا” و”هَيْكَلًا مُتَوَازِنًا” يمثل الـ <strong>Warm Balanced</strong> sound.</li>
 </ul>
-<hr>
+<hr/>
 <h3 id="_4">✍️ نص الأغنية (قصيدة: جسد الصوت)</h3>
-<p><audio controls style="width:100%; margin:0;"><br>
-  <source src="../audio/lessons/L2A/BALANCED_01.mp3" type="audio/mpeg"><br>
-</audio></p>
-<pre><code class="language-text">
+
+<div class="lyrics-card"><audio controls="" data-embed="lyrics" style="width:100%; margin:0;"><br/>
+<source src="../audio/lessons/L2A/BALANCED_01.mp3" type="audio/mpeg"/><br/>
+</audio><pre><code class="language-text">///***///
+
 [Intro]
 
-[Verse 1 - Thin Voice]
+[Verse 1]
 إِنْ غَادَرَ الصَّدْرُ العَمِيقُ حَدِيثَنَا
 فَقَدَ الرَّنِينَ وَضُيِّعَتْ أَثْقَالُهُ
 
@@ -648,7 +664,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 فَاسْأَلْ خَبِيرَ الصَّوْتِ عِنْدَ سَمَاعِهِ
 وَبِأَيِّ مِقْدَارٍ بَدَتْ أَوْزَانُهُ؟
 
-[Verse 2 - Muddy Voice]
+[Verse 2]
 وَالصَّوْتُ إِنْ زَادَتْ كَثَافَةُ طِينِهِ
 كَثُفَ الغُبَارُ وَأُسْدِلَتْ أَسْدَالُهُ
 
@@ -658,7 +674,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 
 [Instrumental Bridge]
 
-[Verse 3 - Sibilance]
+[Verse 3]
 سِينُ الكَلَامِ وَشِينُهُ فِي نُطْقِنَا
 تُؤْذِي المَسَامِعَ لَوْ بَدَتْ أَسْيَافُهُ
 
@@ -666,7 +682,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 فَاسْأَلْ خَبِيرَ الصَّوْتِ عِنْدَ سَمَاعِهِ
 وَبِأَيِّ مِقْدَارٍ بَدَتْ أَوْزَانُهُ؟
 
-[Verse 4 - Balanced &amp; Warm Voice]
+[Verse 4]
 بَحْثُ الفَتَى عَنْ دِفْئِهِ وَرَنِينِهِ
 يُبْدِي الجَمَالَ إِذَا اسْتَقَرَّتْ حَالُهُ
 
@@ -682,7 +698,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 يَصْفُو الرَّنِينُ وَيَسْتَوِي إِيقَاعُهُ
 يَصْفُو الرَّنِينُ وَيَسْتَوِي إِيقَاعُهُ
 
-</code></pre>
+</code></pre></div>
 <h3 id="_5">🎵 التطبيق العملي — التجربة عبر سونو</h3>
 <p>انسخ نص الأغنية أعلاه وضعه في <strong>خانة الكلمات (Lyrics)</strong> في سونو. لأن هذا الدرس يعالج ثلاث مشكلات مختلفة، قم بتوليد الأغنية <strong>بثلاثة محثات مختلفة</strong> لتسمع الفروق:</p>
 <h4 id="thin-hollow-dry">التجربة الأولى: اختبار الصوت النحيف — Thin / Hollow / Dry</h4>
@@ -691,8 +707,8 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 Lo-fi indie, old telephone vocal EQ, thin voice, acoustic guitar, missing low end
 
 </code></pre>
-<p><audio controls style="width:100%; margin:0;"><br>
-  <source src="../audio/lessons/L2A/P1_thin_hollow_01.mp3" type="audio/mpeg"><br>
+<p><audio controls="" style="width:100%; margin:0;"><br/>
+<source src="../audio/lessons/L2A/P1_thin_hollow_01.mp3" type="audio/mpeg"/><br/>
 </audio></p>
 <h4 id="muddy-smeared">التجربة الثانية: اختبار الصوت الموحل — Muddy / Smeared</h4>
 <p><strong>انسخ هذا المحث في خانة (Style of Music):</strong></p>
@@ -700,25 +716,23 @@ Lo-fi indie, old telephone vocal EQ, thin voice, acoustic guitar, missing low en
 Heavy dark rock, cluttered instruments, thick dense bass, muddy mix, wooly vocal, loud kick drum
 
 </code></pre>
-<p><audio controls style="width:100%; margin:0;"><br>
-  <source src="../audio/lessons/L2A/P2_muddy_smeared_01.mp3" type="audio/mpeg"><br>
+<p><audio controls="" style="width:100%; margin:0;"><br/>
+<source src="../audio/lessons/L2A/P2_muddy_smeared_01.mp3" type="audio/mpeg"/><br/>
 </audio></p>
 <h4 id="harsh-sibilance">التجربة الثالثة: اختبار الصوت الحاد — Harsh / Sibilance</h4>
 <p><strong>انسخ هذا المحث في خانة (Style of Music):</strong></p>
 <pre><code>Modern bright pop, boosted highs, sharp sibilant vocal, piercing cymbals
 </code></pre>
-<p><audio controls style="width:100%; margin:0;"><br>
-  <source src="../audio/lessons/L2A/P3_Harsh_Sibilance_01.mp3" type="audio/mpeg"><br>
+<p><audio controls="" style="width:100%; margin:0;"><br/>
+<source src="../audio/lessons/L2A/P3_Harsh_Sibilance_01.mp3" type="audio/mpeg"/><br/>
 </audio></p>
 <blockquote>
 <p><strong>📝 الاكتشاف الرئيسي لهذا الدرس:</strong> Genre هو المفتاح الرئيسي. المصطلحات الوصفية تعمل فقط داخل DNA النوع الموسيقي المختار — اختر النوع أولاً، ثم نقِّح بالمصطلح.</p>
 </blockquote>
-  </article>
+</article>
 </div>
-
-<a id="home-btn" href="../index.html" title="Go to homepage" aria-label="Homepage">⌂</a>
-<a id="back-top" href="#" title="Back to top" aria-label="Back to top">↑</a>
-
+<a aria-label="Homepage" href="../index.html" id="home-btn" title="Go to homepage">⌂</a>
+<a aria-label="Back to top" href="#" id="back-top" title="Back to top">↑</a>
 <script>
 (function () {
   // ── Reading progress ──────────────────────────────────────
@@ -815,6 +829,5 @@ Heavy dark rock, cluttered instruments, thick dense bass, muddy mix, wooly vocal
   if (meta) meta.textContent = words.toLocaleString() + ' words · ' + mins + ' min read';
 })();
 </script>
-
 </body>
 </html>

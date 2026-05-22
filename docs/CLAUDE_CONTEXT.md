@@ -350,3 +350,55 @@ git push
 
 GitHub Pages is configured to serve from **`main` branch, `/` (root)**.
 `index.html` at the root is the entry point.'''
+
+---
+
+### Update for Section 2: Directory Structure
+
+Under `scripts/` in your tree, add:
+
+```
+└── scripts/
+    ├── convert_md2html.py
+    ├── generate_homepage.py
+    └── html_manipulator.py        ← Post-processing DOM manipulation tool (Added)
+```
+
+---
+
+### Update for Section 3: The Scripts (Add this block)
+
+### `scripts/html_manipulator.py`
+
+Processes generated HTML files to perform layout adjustments and DOM operations that are difficult to handle inside standard Markdown files.
+
+**Invocation:**
+
+```bash
+# Process a single file in-place
+python scripts/html_manipulator.py HTML_MUSIC/LESSON_2A.html --move-audio
+
+# Process an entire directory in-place (scans and updates all .html files inside)
+python scripts/html_manipulator.py HTML_MUSIC/ --move-audio
+
+# Dry-run to see what would change without writing to disk
+python scripts/html_manipulator.py HTML_MUSIC/ --move-audio --dry-run
+```
+
+**Key Flags:**
+
+- `--move-audio`: Automatically pairs the designated "perfect audio" with the unique "lyrics block" in the file, wraps them inside a structured `.lyrics-card` element, and injects clean, responsive card CSS.
+- `--remove-tag "selector"`: Deletes all elements matching the given CSS selector.
+- `-o DIR` or `--output-dir DIR`: Writes the processed output to a separate folder instead of in-place.
+
+---
+
+### Update for Section 6: Conventions & Decisions Log (Append to table)
+
+| Decision                                                | Rationale                                                                                                                                                                                                                            |
+| ------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Introduced `html_manipulator.py` post-processing script | Keeps `convert_md2html.py` generic and clean. Structural layout changes (like nesting audio players inside code blocks) are handled at the DOM level using BeautifulSoup.                                                            |
+| Global coupling instead of strict sibling adjacency     | The script searches the entire document for the single lyrics block and the perfect audio block. This allows creators to write intervening headers, annotations, or paragraphs in the markdown without breaking the compiler layout. |
+| Identify lyrics via `///***///` prefix                  | Keeps the Suno prompt boundary marker visible in the code block (preventing prompt leaks/bleed) while allowing the script to reliably locate the exact poetry pre block out of multiple code fences.                                 |
+| Identify perfect audio via `data-embed="lyrics"`        | Allows the compiler to differentiate the lesson's core song audio from secondary illustrative audio tags (e.g., student drafts, bad prompt examples), which should remain standalone and unmodified.                                 |
+| Automatic folder resolution                             | Passing a directory path directly to `html_manipulator.py` automatically resolves and processes all `.html` files contained within that folder, easing bulk asset generation.                                                        |
