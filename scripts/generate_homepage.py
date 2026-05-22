@@ -50,7 +50,7 @@ SITE = {
     "title_en": "Sound University",
     "tagline_ar": "حيث تلتقي الشعرية العربية بهندسة الصوت الحديثة",
     "tagline_en": "Where Arabic poetry meets modern sound engineering",
-    "github_url": "https://github.com",  # ← replace with your repo URL
+    "github_url": "https://github.com/akbargherbal/su",
     "lang": "ar",
     "dir": "rtl",
 }
