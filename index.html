@@ -126,7 +126,7 @@
     #hero {
       position: relative;
       overflow: hidden;
-      padding: 7rem var(--gap) 5.5rem;
+      padding: 7rem var(--gap) 4.5rem;
       text-align: right;
       border-bottom: 1px solid var(--border);
     }
@@ -213,6 +213,68 @@
       letter-spacing: 0.12em;
       text-transform: uppercase;
       color: var(--text-muted);
+    }
+
+    /* ── Hero Teaser Strip ──────────────────────────────────────── */
+    .hero-teaser {
+      position: relative;
+      z-index: 10;
+      margin-top: 3.5rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.25rem 1.75rem;
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      text-align: right;
+      text-decoration: none;
+      color: inherit;
+      transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s, background-color 0.2s;
+      cursor: pointer;
+    }
+    .hero-teaser:hover {
+      transform: translateY(-2px);
+      border-color: var(--border2);
+      background: var(--surface2);
+    }
+    .hero-teaser-badge {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent);
+      background: rgba(232, 200, 125, 0.08);
+      border: 1px solid rgba(232, 200, 125, 0.2);
+      padding: 0.25rem 0.65rem;
+      border-radius: 4px;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .hero-teaser-text {
+      font-family: var(--font-prose);
+      font-size: 1.05rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+      flex: 1;
+      margin: 0;
+      transition: color 0.2s;
+    }
+    .hero-teaser:hover .hero-teaser-text {
+      color: var(--text-strong);
+    }
+    .hero-teaser-link {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--accent2);
+      text-decoration: none;
+      white-space: nowrap;
+      flex-shrink: 0;
+      transition: color 0.15s, transform 0.15s;
+    }
+    .hero-teaser:hover .hero-teaser-link {
+      color: var(--accent);
+      transform: translateX(-4px);
     }
 
     /* ── Main content ───────────────────────────────────────────── */
@@ -408,6 +470,17 @@
     #back-top:hover { border-color: var(--accent); color: var(--accent); }
 
     /* ── Responsive ─────────────────────────────────────────────── */
+    @media (max-width: 768px) {
+      .hero-teaser {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.75rem;
+        padding: 1.25rem;
+      }
+      .hero-teaser-link {
+        align-self: flex-start;
+      }
+    }
     @media (max-width: 640px) {
       .nav-links { display: none; }
       .cards-grid { grid-template-columns: 1fr; }
@@ -426,7 +499,7 @@
     <div class="nav-links">
       <a href="#lessons" class="nav-link">📖 الدروس</a><a href="#music" class="nav-link">🎵 معرض الأغاني</a><a href="#exercises" class="nav-link">🎛️ التمارين التفاعلية</a><a href="#reference" class="nav-link">📚 المرجع السريع</a>
     </div>
-    <a href="https://github.com" class="nav-github" target="_blank" rel="noopener">
+    <a href="https://github.com/akbargherbal/su" class="nav-github" target="_blank" rel="noopener">
       GitHub ↗
     </a>
   </div>
@@ -455,6 +528,15 @@
         <span class="hero-stat-label">إمكانيات · Possibilities</span>
       </div>
     </div>
+    
+    <!-- Hero Teaser Strip (Option A — Fully Clickable Card) -->
+    <a href="Course_Philosophy.html" class="hero-teaser">
+      <span class="hero-teaser-badge">الفلسفة</span>
+      <p class="hero-teaser-text">يتميز الشعر العربي الفصيح بدقته البنائية العالية؛ إذ تمتلك بحور العروض (Al-ʿArūḍ) بنية رياضية، وإيقاعًا داخليًا، وثقلاً عاطفيًا متأصلاً. ومع ذلك، عند محاولة تحويل هذه القصائد الكلاسيكية إلى أعمال مسموعة باستخدام أدوات الصوت التوليدي الحديثة، غالبًا ما يظهر تعارض ملموس: حيث...</p>
+      <span class="hero-teaser-link">
+        اقرأ المزيد ←
+      </span>
+    </a>
   </div>
 </header>
 
@@ -639,7 +721,7 @@
 <footer id="footer">
   <p>
     جامعة الصوت &mdash; Sound University &nbsp;·&nbsp;
-    Built with Python &amp; hosted on <a href="https://github.com" target="_blank" rel="noopener">GitHub Pages</a>
+    Built with Python &amp; hosted on <a href="https://github.com/akbargherbal/su" target="_blank" rel="noopener">GitHub Pages</a>
     &nbsp;·&nbsp; Generated 2026-05-22
   </p>
 </footer>

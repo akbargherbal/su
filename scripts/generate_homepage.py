@@ -53,6 +53,13 @@ SITE = {
     "github_url": "https://github.com/akbargherbal/su",
     "lang": "ar",
     "dir": "rtl",
+    "hero_teaser": {
+        "badge": "الفلسفة",
+        "default_text": "كل درس قصيدة — مكتوبة في بحرٍ عربي أصيل، تحمل في موسيقاها مفهوماً صوتياً دقيقاً. الأذن تتعلم ما لا تستطيع الكلمات وحدها تعليمه.",
+        "link_label": "اقرأ المزيد ←",
+        "link_url": "Course_Philosophy.html",
+        "max_chars": 280,  # ← Control how many characters to display here!
+    },
 }
 
 SECTIONS = [
@@ -73,7 +80,7 @@ SECTIONS = [
         "title_en": "Music Gallery",
         "dir": "HTML_MUSIC",  # create this folder when ready
         "ext": ".html",
-        "coming_soon": True,
+        "coming_soon": False,
         "description": "استمع إلى الأغاني التي أنتجها الطلاب باستخدام سونو — مزيج بين الفصحى والإنتاج الحديث.",
     },
     {
@@ -179,6 +186,55 @@ def scan_section(section: dict) -> list[dict]:
     return pages
 
 
+def get_teaser_text() -> str:
+    """Read Course_Philosophy.html and dynamically parse a preview paragraph."""
+    target_file = ROOT / SITE["hero_teaser"]["link_url"]
+    if target_file.is_file():
+        try:
+            content = target_file.read_text(encoding="utf-8", errors="replace")
+
+            # Strip styles and scripts to prevent false matches
+            content = re.sub(r"<script.*?>.*?</script>", "", content, flags=re.S | re.I)
+            content = re.sub(r"<style.*?>.*?</style>", "", content, flags=re.S | re.I)
+
+            # Find all <p>...</p> blocks
+            paragraphs = re.findall(r"<p[^>]*>(.*?)</p>", content, re.S | re.I)
+            for p in paragraphs:
+                # Remove inner HTML formatting (strong, span, links, etc.)
+                cleaned = re.sub(r"<[^>]+>", "", p).strip()
+
+                # We skip short header subtitles by requiring > 100 characters.
+                # This ensures we match actual explanatory prose paragraphs.
+                if (
+                    len(cleaned) > 100
+                    and "Built with" not in cleaned
+                    and "Generated" not in cleaned
+                    and "topnav" not in p
+                ):
+                    # Unescape common HTML entities
+                    cleaned = (
+                        cleaned.replace("&nbsp;", " ")
+                        .replace("&amp;", "&")
+                        .replace("&quot;", '"')
+                    )
+
+                    # Clean word-boundary truncation using configured limit
+                    max_len = SITE["hero_teaser"].get("max_chars", 170)
+                    if len(cleaned) > max_len:
+                        space_idx = cleaned.rfind(" ", 0, max_len - 3)
+                        if space_idx > 80:
+                            cleaned = cleaned[:space_idx].strip() + "..."
+                        else:
+                            cleaned = cleaned[: max_len - 3].strip() + "..."
+                    return cleaned
+        except Exception as e:
+            print(
+                f"  [warn] Error parsing teaser from philosophy: {e}", file=sys.stderr
+            )
+
+    return SITE["hero_teaser"]["default_text"]
+
+
 # ── Card HTML builders ─────────────────────────────────────────────────────
 
 
@@ -260,7 +316,9 @@ def nav_links(sections: list[dict]) -> str:
 # ── Full page template ─────────────────────────────────────────────────────
 
 
-def render_page(sections_html: str, nav_html: str, page_count: int) -> str:
+def render_page(
+    sections_html: str, nav_html: str, page_count: int, teaser_text: str
+) -> str:
     now = datetime.now().strftime("%Y-%m-%d")
     return f"""<!DOCTYPE html>
 <html lang="{SITE['lang']}" dir="{SITE['dir']}">
@@ -390,7 +448,7 @@ def render_page(sections_html: str, nav_html: str, page_count: int) -> str:
     #hero {{
       position: relative;
       overflow: hidden;
-      padding: 7rem var(--gap) 5.5rem;
+      padding: 7rem var(--gap) 4.5rem;
       text-align: right;
       border-bottom: 1px solid var(--border);
     }}
@@ -477,6 +535,68 @@ def render_page(sections_html: str, nav_html: str, page_count: int) -> str:
       letter-spacing: 0.12em;
       text-transform: uppercase;
       color: var(--text-muted);
+    }}
+
+    /* ── Hero Teaser Strip ──────────────────────────────────────── */
+    .hero-teaser {{
+      position: relative;
+      z-index: 10;
+      margin-top: 3.5rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.25rem 1.75rem;
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      text-align: right;
+      text-decoration: none;
+      color: inherit;
+      transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s, background-color 0.2s;
+      cursor: pointer;
+    }}
+    .hero-teaser:hover {{
+      transform: translateY(-2px);
+      border-color: var(--border2);
+      background: var(--surface2);
+    }}
+    .hero-teaser-badge {{
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent);
+      background: rgba(232, 200, 125, 0.08);
+      border: 1px solid rgba(232, 200, 125, 0.2);
+      padding: 0.25rem 0.65rem;
+      border-radius: 4px;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }}
+    .hero-teaser-text {{
+      font-family: var(--font-prose);
+      font-size: 1.05rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+      flex: 1;
+      margin: 0;
+      transition: color 0.2s;
+    }}
+    .hero-teaser:hover .hero-teaser-text {{
+      color: var(--text-strong);
+    }}
+    .hero-teaser-link {{
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--accent2);
+      text-decoration: none;
+      white-space: nowrap;
+      flex-shrink: 0;
+      transition: color 0.15s, transform 0.15s;
+    }}
+    .hero-teaser:hover .hero-teaser-link {{
+      color: var(--accent);
+      transform: translateX(-4px);
     }}
 
     /* ── Main content ───────────────────────────────────────────── */
@@ -672,6 +792,17 @@ def render_page(sections_html: str, nav_html: str, page_count: int) -> str:
     #back-top:hover {{ border-color: var(--accent); color: var(--accent); }}
 
     /* ── Responsive ─────────────────────────────────────────────── */
+    @media (max-width: 768px) {{
+      .hero-teaser {{
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.75rem;
+        padding: 1.25rem;
+      }}
+      .hero-teaser-link {{
+        align-self: flex-start;
+      }}
+    }}
     @media (max-width: 640px) {{
       .nav-links {{ display: none; }}
       .cards-grid {{ grid-template-columns: 1fr; }}
@@ -719,6 +850,15 @@ def render_page(sections_html: str, nav_html: str, page_count: int) -> str:
         <span class="hero-stat-label">إمكانيات · Possibilities</span>
       </div>
     </div>
+    
+    <!-- Hero Teaser Strip (Option A — Fully Clickable Card) -->
+    <a href="{SITE['hero_teaser']['link_url']}" class="hero-teaser">
+      <span class="hero-teaser-badge">{SITE['hero_teaser']['badge']}</span>
+      <p class="hero-teaser-text">{teaser_text}</p>
+      <span class="hero-teaser-link">
+        {SITE['hero_teaser']['link_label']}
+      </span>
+    </a>
   </div>
 </header>
 
@@ -784,8 +924,11 @@ def main() -> None:
         total_pages += count
         all_sections_html += section_block(section, pages)
 
+    # Dynamic Parser triggers here to fetch philosophy snippet
+    teaser_text = get_teaser_text()
+
     nav_html = nav_links(SECTIONS)
-    html = render_page(all_sections_html, nav_html, total_pages)
+    html = render_page(all_sections_html, nav_html, total_pages, teaser_text)
 
     out = ROOT / "index.html"
     out.write_text(html, encoding="utf-8")
