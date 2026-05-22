@@ -32,7 +32,7 @@
 
 ### ✍️ نص الأغنية (قصيدة: جسد الصوت)
 
-<audio controls style="width:100%; margin:2rem 0;">
+<audio controls style="width:100%; margin:0;">
   <source src="../audio/lessons/L2A/BALANCED_01.mp3" type="audio/mpeg">
 </audio>
 
@@ -98,7 +98,7 @@ Lo-fi indie, old telephone vocal EQ, thin voice, acoustic guitar, missing low en
 
 ```
 
-<audio controls style="width:100%; margin:2rem 0;">
+<audio controls style="width:100%; margin:0;">
   <source src="../audio/lessons/L2A/P1_thin_hollow_01.mp3" type="audio/mpeg">
 </audio>
 
@@ -112,7 +112,7 @@ Heavy dark rock, cluttered instruments, thick dense bass, muddy mix, wooly vocal
 
 ```
 
-<audio controls style="width:100%; margin:2rem 0;">
+<audio controls style="width:100%; margin:0;">
   <source src="../audio/lessons/L2A/P2_muddy_smeared_01.mp3" type="audio/mpeg">
 </audio>
 
@@ -124,7 +124,7 @@ Heavy dark rock, cluttered instruments, thick dense bass, muddy mix, wooly vocal
 Modern bright pop, boosted highs, sharp sibilant vocal, piercing cymbals
 ```
 
-<audio controls style="width:100%; margin:2rem 0;">
+<audio controls style="width:100%; margin:0;">
   <source src="../audio/lessons/L2A/P3_Harsh_Sibilance_01.mp3" type="audio/mpeg">
 </audio>
 
