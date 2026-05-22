@@ -93,7 +93,7 @@ SECTIONS = [
         "title_en": "Quick Reference",
         "dir": "HTML_REFERENCE",  # create this folder when ready
         "ext": ".html",
-        "coming_soon": True,
+        "coming_soon": False,
         "description": "جداول ومصطلحات تقنية للرجوع إليها بسرعة أثناء الإنتاج.",
     },
 ]
