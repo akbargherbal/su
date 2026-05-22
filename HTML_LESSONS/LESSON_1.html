@@ -1,17 +1,16 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+
+<html dir="rtl" lang="ar">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>درس فضاء الصوت — الغرفة (The Room: Spatial & Reverb)</title>
-
-  <!-- Google Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;1,9..144,300&family=JetBrains+Mono:wght@400;500&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
-  <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet" />
-
-  <style>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>درس فضاء الصوت — الغرفة (The Room: Spatial &amp; Reverb)</title>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;1,9..144,300&amp;family=JetBrains+Mono:wght@400;500&amp;family=DM+Sans:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400;1,700&amp;display=swap" rel="stylesheet"/>
+<style>
     /* ── Reset & base ──────────────────────────────────────── */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -587,44 +586,60 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 .codehilite .il { color: #D19A66 } /* Literal.Number.Integer.Long */
 
 
-  </style>
+  
+    /* ── Lyrics card (audio + verse block) ──────────────────── */
+    .lyrics-card {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+      margin: 2rem 0;
+    }
+    .lyrics-card audio {
+      display: block;
+      width: 100%;
+      background: var(--surface2);
+      padding: 0.75rem 1rem;
+      margin: 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .lyrics-card pre {
+      margin: 0 !important;
+      border-radius: 0 !important;
+      border-top: none;
+    }
+</style>
 </head>
 <body>
-
 <div id="progress"></div>
-
 <!-- Sidebar -->
-<nav id="sidebar" aria-label="Table of contents">
-  <div id="sidebar-title">Contents</div>
-  <ul id="toc"></ul>
+<nav aria-label="Table of contents" id="sidebar">
+<div id="sidebar-title">Contents</div>
+<ul id="toc"></ul>
 </nav>
-
-<button id="sidebar-toggle" aria-label="Toggle sidebar">☰ TOC</button>
-
+<button aria-label="Toggle sidebar" id="sidebar-toggle">☰ TOC</button>
 <!-- Main -->
 <div id="main">
-  <article>
-    <header id="doc-header">
-      <h1 id="doc-title">درس فضاء الصوت — الغرفة (The Room: Spatial & Reverb)</h1>
-      <div id="doc-meta"></div>
-    </header>
-
-    <h1 id="the-room-spatial-reverb">درس فضاء الصوت — الغرفة (The Room: Spatial &amp; Reverb)</h1>
+<article>
+<header id="doc-header">
+<h1 id="doc-title">درس فضاء الصوت — الغرفة (The Room: Spatial &amp; Reverb)</h1>
+<div id="doc-meta"></div>
+</header>
+<h1 id="the-room-spatial-reverb">درس فضاء الصوت — الغرفة (The Room: Spatial &amp; Reverb)</h1>
 <h3 id="_1">النسخة أ</h3>
-<hr>
+<hr/>
 <h3 id="_2">💡 مقدمة الدرس</h3>
-<p>يتناول هذا الدرس مفهوم &ldquo;الفضاء الصوتي&rdquo; أو ما يُعرف في هندسة الصوت بـ (Reverb &amp; Echo). عندما نقوم بتسجيل الصوت أو توليده، فإننا نضعه في &ldquo;غرفة&rdquo; افتراضية؛ فإما أن تكون هذه الغرفة ضخمة وذات صدى واسع، أو تكون مساحة صغيرة ومغلقة.</p>
+<p>يتناول هذا الدرس مفهوم “الفضاء الصوتي” أو ما يُعرف في هندسة الصوت بـ (Reverb &amp; Echo). عندما نقوم بتسجيل الصوت أو توليده، فإننا نضعه في “غرفة” افتراضية؛ فإما أن تكون هذه الغرفة ضخمة وذات صدى واسع، أو تكون مساحة صغيرة ومغلقة.</p>
 <ul>
 <li><strong>الصوت المُشتت (Smeared):</strong> يحدث عندما نبالغ في استخدام الصدى (Large Hall). هنا يبدو الصوت بعيداً وكأنه في كهف، وتتشتت الحروف العربية الحادة (مثل القاف والكاف)، فيضيع إيقاع الكلمات.</li>
 <li><strong>الصوت الجاف (Dry):</strong> هو الصوت الخالي من الصدى (Close-mic). هنا يبدو المغني قريباً جداً منك، وتكون الحروف شديدة النقاء والوضوح، لدرجة أنك قد تسمع أنفاس المغني.</li>
 <li><strong>ذيل الصدى (Reverb Tail):</strong> هو الصدى المتلاشي الذي يبقى بعد انتهاء الصوت، ويُعدّ العدو الأول لوضوح التفعيلة العروضية.</li>
 <li><strong>نبرة الغرفة (Room Tone):</strong> النَّفَس الخفي للمكان نفسه — الفرق بين تسجيل يشعرك أنه حدث <em>في مكان ما</em> وتسجيل يبدو مُعقَّماً صوتياً.</li>
 </ul>
-<hr>
+<hr/>
 <h3 id="_3">🎼 البحر الشعري المختار</h3>
 <p>تم نظم هذا الدرس على <strong>(بحر الرَّمَل التام)</strong>.</p>
 <p>يتميز هذا البحر بامتداده الصوتي وانسيابيته؛ مما يجعله الإطار المثالي لتجربة امتداد الصوت في الفضاء (الصدى)، وملاحظة كيف يضيع الوزن العروضي عند التشتت، وكيف يعود متماسكاً عند استخدام الصوت الجاف.</p>
-<hr>
+<hr/>
 <h3 id="_4">💡 الدلالات التعليمية في القصيدة</h3>
 <ul>
 <li><strong>المقدمة:</strong> السؤال التشخيصي المباشر — أين يشدو المطرب؟ في الجوار أم في كهف خفي؟ يضع المستمع فوراً أمام ثنائية الجفاف والتشتت.</li>
@@ -634,69 +649,81 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <li><strong>الجسر:</strong> نبرة الغرفة بصورتيها: الدير الصاخب بالرنين، والبيت الخلو الذي يُلاشي الصوت. كلاهما غرفة — لكن بشخصية مختلفة.</li>
 <li><strong>الخاتمة:</strong> الخلاصة العملية — افهم الأبعاد أولاً، ثم اجعل الأصوات تُبهر.</li>
 </ul>
-<hr>
+<hr/>
 <h3 id="_5">✍️ نص الأغنية (قصيدة: أَيْنَ يَشْدُو مُطْرِبِي)</h3>
-<pre><code>///***///
 
+<div class="lyrics-card"><audio controls="" data-embed="lyrics" style="width:100%; margin:0;"><br/>
+<source src="../audio/lessons/L1/Epic_Cinematic.mp3" type="audio/mpeg"/><br/>
+</audio><pre><code>///***///
 [Intro]
 أَيْنَ يَشْدُو مُطْرِبِي فِي ذَا الْفَضَاءِ؟
 فِي جِوَارِي أَمْ بِكَهْفٍ فِي الْخَفَاءِ؟
 
 [Verse 1]
-حِينَ يَغْدُو صَوْتُ شَادٍ مُسْتَهَانَا  ◇  تَسْمَعُوهُ غَارِقاً لَا تَعْرِفُونَا
-تَفْقِدُ الْقَافُ حُدُوداً تَرْتَجِيهَا  ◇  وَتَرَى الْكَافَ تَتِيهُ فِي مَدَانَا
+حِينَ يَغْدُو صَوْتُ شَادٍ مُسْتَهَانَا
+تَسْمَعُوهُ غَارِقاً لَا تَعْرِفُونَا
+تَفْقِدُ الْقَافُ حُدُوداً تَرْتَجِيهَا
+وَتَرَى الْكَافَ تَتِيهُ فِي مَدَانَا
 
 [Chorus]
-صَوْتُنَا الصَّافِي جَفَافٌ بِالْوُضُوحِ  ◇  عِنْدَ وَجْهٍ كَادَ يَشْدُو بِالْقَرِيبِ
-تَسْمَعُ الأَنْفَاسَ قَبْلَ النُّطْقِ مِنِّي  ◇  مَا لَهُ ذَيْلٌ طَوِيلٌ فِي الْعُبُورِ
+صَوْتُنَا الصَّافِي جَفَافٌ بِالْوُضُوحِ
+عِنْدَ وَجْهٍ كَادَ يَشْدُو بِالْقَرِيبِ
+تَسْمَعُ الأَنْفَاسَ قَبْلَ النُّطْقِ مِنِّي
+مَا لَهُ ذَيْلٌ طَوِيلٌ فِي الْعُبُورِ
 
 [Verse 2]
-ذَيْلُهُ يَمْتَدُّ صَوْتًا فِي الْحِصَارِ  ◇  يَأْكُلُ الْأَلْفَاظَ جَهْرًا بِالْمَسَارِ
-فِي فِضَاءَاتٍ طَوَالٍ كَالْقِفَارِ  ◇  مَانِعًا كُلَّ وُضُوحٍ فِي الْإِطَارِ
+ذَيْلُهُ يَمْتَدُّ صَوْتًا فِي الْحِصَارِ
+يَأْكُلُ الْأَلْفَاظَ جَهْرًا بِالْمَسَارِ
+فِي فَضَاءَاتٍ طِوَالٍ كَالْقِفَارِ
+مَانِعًا كُلَّ وُضُوحٍ فِي الْإِطَارِ
 
 [Chorus]
-صَوْتُنَا الصَّافِي جَفَافٌ بِالْوُضُوحِ  ◇  عِنْدَ وَجْهٍ كَادَ يَشْدُو بِالْقَرِيبِ
-تَسْمَعُ الأَنْفَاسَ قَبْلَ النُّطْقِ مِنِّي  ◇  مَا لَهُ ذَيْلٌ طَوِيلٌ فِي الْعُبُورِ
+صَوْتُنَا الصَّافِي جَفَافٌ بِالْوُضُوحِ
+عِنْدَ وَجْهٍ كَادَ يَشْدُو بِالْقَرِيبِ
+تَسْمَعُ الأَنْفَاسَ قَبْلَ النُّطْقِ مِنِّي
+مَا لَهُ ذَيْلٌ طَوِيلٌ فِي الْعُبُورِ
 
 [Bridge]
-كُلُّ صَوْتٍ فِيهِ نَبْرٌ بِالرَّنِينِ  ◇  مِثْلُ دَيْرٍ بَاتَ يَشْدُو فِي السُّكُونِ
-أَوْ كَبَيْتٍ بَاتَ خِلْوًا مِنْ فُنُونِ  ◇  يَتَلَاشَى النُّطْقُ فِيهِ كَالظُّنُونِ
+كُلُّ صَوْتٍ فِيهِ نَبْرٌ بِالرَّنِينِ
+مِثْلُ دَيْرٍ بَاتَ يَشْدُو فِي السُّكُونِ
+أَوْ كَبَيْتٍ بَاتَ خِلْوًا مِنْ فُنُونِ
+يَتَلَاشَى النُّطْقُ فِيهِ كَالظُّنُونِ
 
 [Chorus]
-صَوْتُنَا الصَّافِي جَفَافٌ بِالْوُضُوحِ  ◇  عِنْدَ وَجْهٍ كَادَ يَشْدُو بِالْقَرِيبِ
-تَسْمَعُ الأَنْفَاسَ قَبْلَ النُّطْقِ مِنِّي  ◇  مَا لَهُ ذَيْلٌ طَوِيلٌ فِي الْعُبُورِ
+صَوْتُنَا الصَّافِي جَفَافٌ بِالْوُضُوحِ
+عِنْدَ وَجْهٍ كَادَ يَشْدُو بِالْقَرِيبِ
+تَسْمَعُ الأَنْفَاسَ قَبْلَ النُّطْقِ مِنِّي
+مَا لَهُ ذَيْلٌ طَوِيلٌ فِي الْعُبُورِ
 
 [Outro]
 فَافْهَمِ الْأَبْعَادَ تَهْدِي فِي الْعُبُورِ
 وَاجْعَلِ الأَصْوَاتَ أَبْهَى كَالْبُدُورِ
-</code></pre>
-<hr>
+</code></pre></div>
+<hr/>
 <h3 id="_6">🎵 التطبيق العملي — التجربة عبر سونو</h3>
 <p>انسخ نص الأغنية أعلاه وضعه في <strong>خانة الكلمات (Lyrics)</strong> في سونو، ثم ولِّد الأغنية <strong>مرتين</strong> بالمحثات التالية:</p>
-<hr>
+<hr/>
 <h4 id="smeared">التجربة الأولى: اختبار الصوت المُشتت — Smeared</h4>
 <p><strong>انسخ هذا المحث في خانة (Style of Music):</strong></p>
 <pre><code>Epic atmospheric acoustic, large hall reverb, cinematic vocal, slow waltz
 </code></pre>
-<p><strong>ماذا ستلاحظ؟</strong><br>
-استمع للمقطع الأول — القاف في &ldquo;يَغْدُو&rdquo; والكاف في &ldquo;مُسْتَهَانَا&rdquo; ستتهاوى في الفراغ. الصدى الفضائي يبتلع حدودهما قبل أن تصل إلى أذنك، ويتشوه وزن الرمل لأن ذيل الصدى يُطيل المقاطع خارج ضبطها العروضي.</p>
-<hr>
+<p><strong>ماذا ستلاحظ؟</strong><br/>
+استمع للمقطع الأول — القاف في “يَغْدُو” والكاف في “مُسْتَهَانَا” ستتهاوى في الفراغ. الصدى الفضائي يبتلع حدودهما قبل أن تصل إلى أذنك، ويتشوه وزن الرمل لأن ذيل الصدى يُطيل المقاطع خارج ضبطها العروضي.</p>
+<hr/>
 <h4 id="dry">التجربة الثانية: اختبار الصوت الجاف والنقي — Dry</h4>
 <p><strong>انسخ هذا المحث في خانة (Style of Music):</strong></p>
 <pre><code>Dry studio vocal, intimate, close-mic, acoustic guitar, sparse arrangement, waltz
 </code></pre>
-<p><strong>ماذا ستلاحظ؟</strong><br>
-الصوت سيصبح قريباً جداً منك. ستسمع الأنفاس قبل الكلمات تماماً كما تقول اللازمة: <em>&ldquo;تَسْمَعُ الأَنْفَاسَ قَبْلَ النُّطْقِ مِنِّي&rdquo;</em>. هنا يطرق وزن الرمل أذنك بصفاء تام — بيّناً كأنه نبضات ساعة دقيقة.</p>
-<hr>
+<p><strong>ماذا ستلاحظ؟</strong><br/>
+الصوت سيصبح قريباً جداً منك. ستسمع الأنفاس قبل الكلمات تماماً كما تقول اللازمة: <em>“تَسْمَعُ الأَنْفَاسَ قَبْلَ النُّطْقِ مِنِّي”</em>. هنا يطرق وزن الرمل أذنك بصفاء تام — بيّناً كأنه نبضات ساعة دقيقة.</p>
+<hr/>
 <blockquote>
 <p><strong>📝 الاكتشاف الرئيسي لهذا الدرس:</strong> سونو لا يملك مقابض ضبط. Genre هو الغرفة. اختر النوع الموسيقي أولاً، وسيحدد لك الصدى تلقائياً.</p>
 </blockquote>
-  </article>
+</article>
 </div>
-
-<a id="home-btn" href="../index.html" title="Go to homepage" aria-label="Homepage">⌂</a>
-<a id="back-top" href="#" title="Back to top" aria-label="Back to top">↑</a>
-
+<a aria-label="Homepage" href="../index.html" id="home-btn" title="Go to homepage">⌂</a>
+<a aria-label="Back to top" href="#" id="back-top" title="Back to top">↑</a>
 <script>
 (function () {
   // ── Reading progress ──────────────────────────────────────
@@ -793,6 +820,5 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
   if (meta) meta.textContent = words.toLocaleString() + ' words · ' + mins + ' min read';
 })();
 </script>
-
 </body>
 </html>
