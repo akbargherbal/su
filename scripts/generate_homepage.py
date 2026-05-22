@@ -39,59 +39,60 @@ from pathlib import Path
 from datetime import datetime
 
 # ── Project root (wherever this script lives) ──────────────────────────────
-ROOT = Path(__file__).parent
+ROOT = Path(__file__).parent.parent
+
 
 # ═══════════════════════════════════════════════════════════════════════════
 #  CONFIGURE YOUR SECTIONS HERE
 # ═══════════════════════════════════════════════════════════════════════════
 SITE = {
-    "title_ar":    "جامعة الصوت",
-    "title_en":    "Sound University",
-    "tagline_ar":  "حيث تلتقي الشعرية العربية بهندسة الصوت الحديثة",
-    "tagline_en":  "Where Arabic poetry meets modern sound engineering",
-    "github_url":  "https://github.com",   # ← replace with your repo URL
-    "lang":        "ar",
-    "dir":         "rtl",
+    "title_ar": "جامعة الصوت",
+    "title_en": "Sound University",
+    "tagline_ar": "حيث تلتقي الشعرية العربية بهندسة الصوت الحديثة",
+    "tagline_en": "Where Arabic poetry meets modern sound engineering",
+    "github_url": "https://github.com",  # ← replace with your repo URL
+    "lang": "ar",
+    "dir": "rtl",
 }
 
 SECTIONS = [
     {
-        "id":          "lessons",
-        "icon":        "📖",
-        "title_ar":    "الدروس",
-        "title_en":    "Lessons",
-        "dir":         "HTML_LESSONS",
-        "ext":         ".html",
+        "id": "lessons",
+        "icon": "📖",
+        "title_ar": "الدروس",
+        "title_en": "Lessons",
+        "dir": "HTML_LESSONS",
+        "ext": ".html",
         "coming_soon": False,
         "description": "دروس هندسة الصوت مُقدَّمة شعرياً — كل درس قصيدة وتجربة سمعية.",
     },
     {
-        "id":          "music",
-        "icon":        "🎵",
-        "title_ar":    "معرض الأغاني",
-        "title_en":    "Music Gallery",
-        "dir":         "HTML_MUSIC",       # create this folder when ready
-        "ext":         ".html",
+        "id": "music",
+        "icon": "🎵",
+        "title_ar": "معرض الأغاني",
+        "title_en": "Music Gallery",
+        "dir": "HTML_MUSIC",  # create this folder when ready
+        "ext": ".html",
         "coming_soon": True,
         "description": "استمع إلى الأغاني التي أنتجها الطلاب باستخدام سونو — مزيج بين الفصحى والإنتاج الحديث.",
     },
     {
-        "id":          "exercises",
-        "icon":        "🎛️",
-        "title_ar":    "التمارين التفاعلية",
-        "title_en":    "Interactive Exercises",
-        "dir":         "HTML_EXERCISES",   # create this folder when ready
-        "ext":         ".html",
+        "id": "exercises",
+        "icon": "🎛️",
+        "title_ar": "التمارين التفاعلية",
+        "title_en": "Interactive Exercises",
+        "dir": "HTML_EXERCISES",  # create this folder when ready
+        "ext": ".html",
         "coming_soon": True,
         "description": "تمارين عملية لتطبيق مفاهيم المزيج والتردد والديناميكية.",
     },
     {
-        "id":          "reference",
-        "icon":        "📚",
-        "title_ar":    "المرجع السريع",
-        "title_en":    "Quick Reference",
-        "dir":         "HTML_REFERENCE",   # create this folder when ready
-        "ext":         ".html",
+        "id": "reference",
+        "icon": "📚",
+        "title_ar": "المرجع السريع",
+        "title_en": "Quick Reference",
+        "dir": "HTML_REFERENCE",  # create this folder when ready
+        "ext": ".html",
         "coming_soon": True,
         "description": "جداول ومصطلحات تقنية للرجوع إليها بسرعة أثناء الإنتاج.",
     },
@@ -103,19 +104,20 @@ SECTIONS = [
 #  If a file is not listed here, the script extracts its <title> automatically.
 # ═══════════════════════════════════════════════════════════════════════════
 LESSON_META: dict[str, dict] = {
-    "LESSON_1":  {"number": "01", "badge": "مقدمة"},
+    "LESSON_1": {"number": "01", "badge": "مقدمة"},
     "LESSON_2A": {"number": "02A"},
     "LESSON_2B": {"number": "02B"},
     "LESSON_3A": {"number": "03A"},
     "LESSON_3B": {"number": "03B"},
-    "LESSON_4":  {"number": "04"},
-    "LESSON_5":  {"number": "05"},
+    "LESSON_4": {"number": "04"},
+    "LESSON_5": {"number": "05"},
     "LESSON_06": {"number": "06"},
-    "LESSON_7":  {"number": "07"},
+    "LESSON_7": {"number": "07"},
 }
 
 
 # ── Helpers ────────────────────────────────────────────────────────────────
+
 
 def extract_meta(html_path: Path) -> dict:
     """Pull <title> and <meta name=description> from an HTML file."""
@@ -125,11 +127,12 @@ def extract_meta(html_path: Path) -> dict:
         return {"title": html_path.stem, "description": ""}
 
     title_m = re.search(r"<title[^>]*>(.*?)</title>", text, re.S | re.I)
-    title    = title_m.group(1).strip() if title_m else html_path.stem
+    title = title_m.group(1).strip() if title_m else html_path.stem
 
-    desc_m   = re.search(
+    desc_m = re.search(
         r'<meta\s+name=["\']description["\']\s+content=["\'](.*?)["\']',
-        text, re.S | re.I
+        text,
+        re.S | re.I,
     )
     description = desc_m.group(1).strip() if desc_m else ""
 
@@ -150,7 +153,7 @@ def scan_section(section: dict) -> list[dict]:
         return []
 
     folder = ROOT / section["dir"]
-    ext    = section.get("ext", ".html")
+    ext = section.get("ext", ".html")
 
     if not folder.is_dir():
         print(f"  [warn] Directory not found: {folder}  → skipping", file=sys.stderr)
@@ -159,22 +162,25 @@ def scan_section(section: dict) -> list[dict]:
     files = sorted(folder.glob(f"*{ext}"), key=sort_key)
     pages = []
     for f in files:
-        meta    = extract_meta(f)
-        stem    = f.stem.upper()
+        meta = extract_meta(f)
+        stem = f.stem.upper()
         override = LESSON_META.get(stem, {})
         rel_path = f.relative_to(ROOT).as_posix()
-        pages.append({
-            "href":        rel_path,
-            "title":       meta["title"],
-            "description": meta["description"],
-            "stem":        stem,
-            "number":      override.get("number", ""),
-            "badge":       override.get("badge", ""),
-        })
+        pages.append(
+            {
+                "href": rel_path,
+                "title": meta["title"],
+                "description": meta["description"],
+                "stem": stem,
+                "number": override.get("number", ""),
+                "badge": override.get("badge", ""),
+            }
+        )
     return pages
 
 
 # ── Card HTML builders ─────────────────────────────────────────────────────
+
 
 def lesson_card(page: dict) -> str:
     number_html = (
@@ -218,7 +224,8 @@ def section_block(section: dict, pages: list[dict]) -> str:
 
     desc_html = (
         f'<p class="section-desc">{section["description"]}</p>'
-        if section.get("description") else ""
+        if section.get("description")
+        else ""
     )
 
     return f"""
@@ -241,16 +248,17 @@ def section_block(section: dict, pages: list[dict]) -> str:
 
 # ── Navigation items ───────────────────────────────────────────────────────
 
+
 def nav_links(sections: list[dict]) -> str:
     items = "".join(
-        f'<a href="#{s["id"]}" class="nav-link">'
-        f'{s["icon"]} {s["title_ar"]}</a>'
+        f'<a href="#{s["id"]}" class="nav-link">' f'{s["icon"]} {s["title_ar"]}</a>'
         for s in sections
     )
     return items
 
 
 # ── Full page template ─────────────────────────────────────────────────────
+
 
 def render_page(sections_html: str, nav_html: str, page_count: int) -> str:
     now = datetime.now().strftime("%Y-%m-%d")
@@ -758,6 +766,7 @@ def render_page(sections_html: str, nav_html: str, page_count: int) -> str:
 
 # ── Main ───────────────────────────────────────────────────────────────────
 
+
 def main() -> None:
     print(f"Sound University — Homepage Generator")
     print(f"Project root: {ROOT}\n")
@@ -769,12 +778,14 @@ def main() -> None:
         pages = scan_section(section)
         count = len(pages)
         status = "coming soon" if section.get("coming_soon") else f"{count} file(s)"
-        print(f"  [{section['id']:12s}]  {section['dir'] if not section.get('coming_soon') else '—':20s}  {status}")
+        print(
+            f"  [{section['id']:12s}]  {section['dir'] if not section.get('coming_soon') else '—':20s}  {status}"
+        )
         total_pages += count
         all_sections_html += section_block(section, pages)
 
     nav_html = nav_links(SECTIONS)
-    html     = render_page(all_sections_html, nav_html, total_pages)
+    html = render_page(all_sections_html, nav_html, total_pages)
 
     out = ROOT / "index.html"
     out.write_text(html, encoding="utf-8")
