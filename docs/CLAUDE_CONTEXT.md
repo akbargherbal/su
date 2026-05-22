@@ -315,3 +315,38 @@ Paste this file and say what you need. Example openers:
 
 Claude will read this document and have enough context to help without
 needing to re-examine every file.
+
+---
+
+# 1. Author / edit a lesson in LESSONS/ or standalone pages (e.g. PHILOSOPHY/)
+
+# 2. Regenerate HTML lessons
+
+python scripts/convert_md2html.py ./LESSONS -o ./HTML_LESSONS \\
+--lang ar --prose --home-url ../index.html
+
+# 3. Compile standalone root pages (like Course Philosophy) to root directory
+
+python scripts/convert_md2html.py ./PHILOSOPHY -o . --lang ar --prose --home-url ./index.html
+
+# 4. Regenerate student work pages (same command, different folders)
+
+python scripts/convert_md2html.py ./MUSIC -o ./HTML_MUSIC \\
+--lang ar --prose --home-url ../index.html
+
+# 5. Drop mp3 files into audio/lessons/ or audio/music/ as appropriate
+
+# 6. Regenerate homepage
+
+python scripts/generate_homepage.py
+
+# 7. Commit and push — GitHub Pages redeploys automatically
+
+```
+git add .
+git commit -m "update website"
+git push
+```
+
+GitHub Pages is configured to serve from **`main` branch, `/` (root)**.
+`index.html` at the root is the entry point.'''
