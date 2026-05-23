@@ -36,6 +36,12 @@ Sound_University_Website/           ← project root / git root
 ├── HTML_REFERENCE/                 ← reference pages
 │   └── GLOSSARY.html
 │
+├── TOOLS/                          ← standalone HTML tool apps (NOT converted from Markdown)
+│   ├── Tone.js                     ← dependency for arabic-poetry-drum-machine.html
+│   ├── arabic-poetry-drum-machine.html
+│   ├── arabic-poetic-meters-and-iqaat-guide.html
+│   └── suno-prompt-generator-arabic-iqaat.html
+│
 ├── LESSONS/                        ← hand-authored Markdown source (mirrors HTML_LESSONS)
 ├── MUSIC/                          ← hand-authored Markdown source (mirrors HTML_MUSIC)
 │
@@ -249,12 +255,12 @@ The homepage uses fixed RTL CSS (no ternaries) since it's always Arabic.
 
 ## 5. Current Sections State
 
-| Section id  | Folder            | `coming_soon` | Status                        |
-|-------------|-------------------|---------------|-------------------------------|
-| `lessons`   | `HTML_LESSONS/`   | `False`       | Live — 9 lessons              |
-| `music`     | `HTML_MUSIC/`     | `False`       | Live — LESSON_2A.html present |
-| `exercises` | `HTML_EXERCISES/` | `True`        | Placeholder card shown        |
-| `reference` | `HTML_REFERENCE/` | `False`       | Live — GLOSSARY.html present  |
+| Section id | Folder            | `coming_soon` | Status                           |
+|------------|-------------------|---------------|----------------------------------|
+| `lessons`  | `HTML_LESSONS/`   | `False`       | Live — 9 lessons                 |
+| `music`    | `HTML_MUSIC/`     | `False`       | Live — LESSON_2A.html present    |
+| `tools`    | `TOOLS/`          | `False`       | Live — 3 tools + Tone.js         |
+| `reference`| `HTML_REFERENCE/` | `False`       | Live — GLOSSARY.html present     |
 
 ---
 
@@ -297,6 +303,8 @@ GitHub Pages redeploys automatically on push to `main`.
 | `convert_md2html` is an external CLI | Not a project file; no path to maintain or version |
 | `html_mainpulator.py` filename typo | Intentional preservation — changing it would break any documented invocations |
 | `--home-url` is a CLI flag, not hardcoded | Keeps `convert_md2html` generic across different deploy contexts |
+| `HTML_` prefix = Markdown-converted output | `HTML_LESSONS/`, `HTML_MUSIC/` contain generated HTML. `TOOLS/` has no `HTML_` prefix because files are native HTML, not converted from Markdown |
+| `TOOLS/` filenames use hyphens | URL-friendly; consistent across all three tool files |
 | Lyrics block marker: `///***///` | Prefix on the `<pre>` code block; visible in Markdown, reliably locatable by the manipulator |
 | Perfect audio marker: `data-embed="lyrics"` | Differentiates the canonical song from secondary/illustrative audio tags |
 | `--move-audio` uses global search | Allows prose/headings between the audio tag and the lyrics block in Markdown |
@@ -305,3 +313,13 @@ GitHub Pages redeploys automatically on push to `main`.
 | Lesson sort: numeric then alpha suffix | `LESSON_2A` < `LESSON_2B`; `LESSON_06` sorts as 6, not 60 |
 | Teaser prose threshold `> 100` chars | Automatically skips short headings/subtitles when extracting philosophy preview |
 | `ROOT = Path(__file__).parent.parent` | `generate_homepage.py` lives in `scripts/`; this resolves to project root regardless of working directory |
+
+---
+
+## 8. To Do
+
+> Remove items once completed.
+
+- **Theme `TOOLS/` apps to match website design** — the three tools were built independently and use their own colour schemes. Goal is visual consistency with the site's dark theme and design tokens (colours, fonts). No structural overhaul — CSS theming only.
+- **Add HTML boilerplate to `arabic-poetic-meters-and-iqaat-guide.html`** — currently lacks proper `<!DOCTYPE>`, `<html>`, `<head>` structure. Browser renders it fine but it should be clean.
+

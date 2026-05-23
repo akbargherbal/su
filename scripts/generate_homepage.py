@@ -84,14 +84,14 @@ SECTIONS = [
         "description": "استمع إلى الأغاني التي أنتجها الطلاب باستخدام سونو — مزيج بين الفصحى والإنتاج الحديث.",
     },
     {
-        "id": "exercises",
+        "id": "tools",
         "icon": "🎛️",
-        "title_ar": "التمارين التفاعلية",
-        "title_en": "Interactive Exercises",
-        "dir": "HTML_EXERCISES",  # create this folder when ready
+        "title_ar": "أدوات وتطبيقات",
+        "title_en": "Tools & Apps",
+        "dir": "TOOLS",
         "ext": ".html",
-        "coming_soon": True,
-        "description": "تمارين عملية لتطبيق مفاهيم المزيج والتردد والديناميكية.",
+        "coming_soon": False,
+        "description": "أدوات تفاعلية لاستكشاف الإيقاع والبحور والإنتاج الموسيقي.",
     },
     {
         "id": "reference",

@@ -1,0 +1,424 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>آلة إيقاع بحور الشعر العربي — Arabic Poetry Drum Machine</title>
+    <style>
+      /* Root colors matching both Light and Dark modes */
+      :root {
+        --color-text-primary: #1f1f1f;
+        --color-text-secondary: #6b7280;
+        --color-text-tertiary: #9ca3af;
+        --color-background-primary: #ffffff;
+        --color-background-secondary: #f3f4f6;
+        --color-border-primary: #111827;
+        --color-border-tertiary: #e5e7eb;
+
+        --color-background-info: #eff6ff;
+        --color-text-info: #1d4ed8;
+        --color-border-info: #bfdbfe;
+
+        --color-background-danger: #fdf2f8;
+        --color-text-danger: #be185d;
+        --color-border-danger: #fbcfe8;
+
+        --font-sans:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          "Helvetica Neue", Arial, sans-serif;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --color-text-primary: #f3f4f6;
+          --color-text-secondary: #9ca3af;
+          --color-text-tertiary: #6b7280;
+          --color-background-primary: #111827;
+          --color-background-secondary: #1f2937;
+          --color-border-primary: #f9fafb;
+          --color-border-tertiary: #374151;
+
+          --color-background-info: #172554;
+          --color-text-info: #60a5fa;
+          --color-border-info: #1e3a8a;
+
+          --color-background-danger: #500724;
+          --color-text-danger: #f472b6;
+          --color-border-danger: #831843;
+        }
+      }
+
+      body {
+        background-color: var(--color-background-primary);
+        color: var(--color-text-primary);
+        font-family: var(--font-sans);
+        margin: 0;
+        padding: 20px;
+        display: flex;
+        justify-content: center;
+        direction: rtl;
+      }
+
+      .container {
+        width: 100%;
+        max-width: 800px;
+        background-color: var(--color-background-primary);
+        border: 1px solid var(--color-border-tertiary);
+        border-radius: 12px;
+        padding: 24px;
+        box-shadow:
+          0 4px 6px -1px rgba(0, 0, 0, 0.05),
+          0 2px 4px -1px rgba(0, 0, 0, 0.03);
+      }
+
+      h1 {
+        font-size: 20px;
+        font-weight: 600;
+        margin-top: 0;
+        margin-bottom: 8px;
+        border-bottom: 1px solid var(--color-border-tertiary);
+        padding-bottom: 12px;
+      }
+
+      .sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+      }
+
+      .bahr-btn {
+        padding: 6px 12px;
+        font-size: 13px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-family: var(--font-sans);
+        transition: all 0.15s ease-in-out;
+        background: var(--color-background-primary);
+        color: var(--color-text-primary);
+      }
+
+      .bahr-btn:hover {
+        background: var(--color-background-secondary);
+      }
+
+      .bahr-btn.sel {
+        background: var(--color-background-secondary);
+        font-weight: bold;
+        border-color: var(--color-border-primary) !important;
+      }
+
+      .drum-cell {
+        border-radius: 4px;
+        flex-shrink: 0;
+        transition:
+          background 0.04s,
+          transform 0.04s;
+      }
+
+      .drum-cell.playing {
+        transform: scale(1.15);
+      }
+
+      input[type="range"] {
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>آلة إيقاع بحور الشعر العربي — Arabic Poetry Drum Machine</h1>
+      <div id="root"></div>
+    </div>
+
+    <!-- Removed 'defer' so Tone.js loads synchronously before the app script -->
+    <script src="Tone.js"></script>
+
+    <script>
+      const T = {
+        'فَعُولُنْ':     [0,1,1],
+        'مَفَاعِيلُنْ':  [0,1,1,1],
+        'مَفَاعِلُنْ':   [0,1,0,1],
+        'فَاعِلُنْ':     [1,0,1],
+        'فَاعِلَاتُنْ':  [1,0,1,1],
+        'مُسْتَفْعِلُنْ':[1,1,0,1],
+        'مُتَفَاعِلُنْ': [0,0,1,0,1],
+        'مَفَاعَلَتُنْ': [0,1,0,0,1],
+        'مَفْعُولَاتُ':  [1,1,1,0],
+      };
+
+      const CLR = {
+        'فَعُولُنْ':     ['#EEEDFE','#7F77DD','#534AB7'],
+        'مَفَاعِيلُنْ':  ['#E1F5EE','#1D9E75','#0F6E56'],
+        'مَفَاعِلُنْ':   ['#d8f0e8','#0F6E56','#085041'],
+        'فَاعِلُنْ':     ['#FAECE7','#D85A30','#993C1D'],
+        'فَاعِلَاتُنْ':  ['#E6F1FB','#378ADD','#185FA5'],
+        'مُسْتَفْعِلُنْ':['#FBEAF0','#D4537E','#993556'],
+        'مُتَفَاعِلُنْ': ['#FAEEDA','#BA7517','#854F0B'],
+        'مَفَاعَلَتُنْ': ['#EAF3DE','#639922','#3B6D11'],
+        'مَفْعُولَاتُ':  ['#F1EFE8','#888780','#5F5E5A'],
+      };
+
+      const BAHUR = {
+        'الطَّوِيل':     { feet: ['فَعُولُنْ','مَفَاعِيلُنْ','فَعُولُنْ','مَفَاعِلُنْ'],     defaultBpm: 80  },
+        'الْمَدِيد':    { feet: ['فَاعِلَاتُنْ','فَاعِلُنْ','فَاعِلَاتُنْ'],               defaultBpm: 88  },
+        'الْبَسِيط':    { feet: ['مُسْتَفْعِلُنْ','فَاعِلُنْ','مُسْتَفْعِلُنْ','فَاعِلُنْ'], defaultBpm: 96  },
+        'الْوَافِر':    { feet: ['مَفَاعَلَتُنْ','مَفَاعَلَتُنْ','فَعُولُنْ'],               defaultBpm: 84  },
+        'الْكَامِل':    { feet: ['مُتَفَاعِلُنْ','مُتَفَاعِلُنْ','مُتَفَاعِلُنْ'],           defaultBpm: 96  },
+        'الْهَزَج':     { feet: ['مَفَاعِيلُنْ','مَفَاعِيلُنْ'],                            defaultBpm: 104 },
+        'الرَّجَز':     { feet: ['مُسْتَفْعِلُنْ','مُسْتَفْعِلُنْ','مُسْتَفْعِلُنْ'],        defaultBpm: 96  },
+        'الرَّمَل':     { feet: ['فَاعِلَاتُنْ','فَاعِلَاتُنْ','فَاعِلَاتُنْ'],              defaultBpm: 88  },
+        'السَّرِيع':    { feet: ['مُسْتَفْعِلُنْ','مُسْتَفْعِلُنْ','فَاعِلُنْ'],             defaultBpm: 108 },
+        'الْمُنْسَرِح': { feet: ['مُسْتَفْعِلُنْ','مَفْعُولَاتُ','مُسْتَفْعِلُنْ'],          defaultBpm: 96  },
+        'الْخَفِيف':   { feet: ['فَاعِلَاتُنْ','مُسْتَفْعِلُنْ','فَاعِلَاتُنْ'],            defaultBpm: 72  },
+        'الْمُضَارِع':  { feet: ['مَفَاعِيلُنْ','فَاعِلَاتُنْ'],                             defaultBpm: 88  },
+        'الْمُقْتَضَب': { feet: ['مَفْعُولَاتُ','مُسْتَفْعِلُنْ'],                           defaultBpm: 100 },
+        'الْمُجْتَثّ':  { feet: ['مُسْتَفْعِلُنْ','فَاعِلَاتُنْ'],                           defaultBpm: 96  },
+        'الْمُتَقَارِب':{ feet: ['فَعُولُنْ','فَعُولُنْ','فَعُولُنْ','فَعُولُنْ'],             defaultBpm: 88  },
+        'الْمُتَدَارَك':{ feet: ['فَاعِلُنْ','فَاعِلُنْ','فَاعِلُنْ','فَاعِلُنْ'],             defaultBpm: 112 },
+      };
+
+      function buildPat(bahr) {
+        const feet = BAHUR[bahr].feet, bits = [], meta = [], bnd = new Set();
+        let pos = 0;
+        feet.forEach(f => {
+          bnd.add(pos);
+          T[f].forEach((b, bi) => {
+            bits.push(b);
+            meta.push({ foot: f, isFirst: bi === 0 });
+          });
+          pos += T[f].length;
+        });
+        const kick = bits.map(b => b === 1);
+        const snare = bits.map((_, i) => bnd.has(i));
+        const hihat = bits.map(b => b === 0);
+        return { bits, meta, bnd, kick, snare, hihat, len: bits.length };
+      }
+
+      // App State
+      let bahr = 'الطَّوِيل', bpm = BAHUR['الطَّوِيل'].defaultBpm, playing = false, step = -1;
+      let inst = null, seq = null;
+
+      function initInst() {
+        if (inst) return;
+        const kick = new Tone.MembraneSynth({
+          pitchDecay: 0.07,
+          octaves: 5,
+          envelope: { attack: 0.001, decay: 0.35, sustain: 0, release: 0.5 }
+        }).toDestination();
+        
+        const snare = new Tone.NoiseSynth({
+          noise: { type: 'white' },
+          envelope: { attack: 0.001, decay: 0.16, sustain: 0, release: 0.1 }
+        }).toDestination();
+        snare.volume.value = -5;
+        
+        const hihat = new Tone.MetalSynth({
+          frequency: 700,
+          envelope: { attack: 0.001, decay: 0.04, sustain: 0, release: 0.04 },
+          harmonicity: 5.1,
+          modulationIndex: 32,
+          resonance: 4000,
+          octaves: 1.5
+        }).toDestination();
+        hihat.volume.value = -16;
+        
+        inst = { kick, snare, hihat };
+      }
+
+      function stopPlay() {
+        if (seq) {
+          seq.stop();
+          seq.dispose();
+          seq = null;
+        }
+        Tone.getTransport().stop();
+        playing = false;
+        step = -1;
+        render();
+      }
+
+      function startPlay() {
+        initInst();
+        const p = buildPat(bahr);
+        Tone.getTransport().bpm.value = bpm;
+        
+        seq = new Tone.Sequence((time, s) => {
+          if (p.kick[s]) inst.kick.triggerAttackRelease('C1', '8n', time);
+          if (p.snare[s]) inst.snare.triggerAttackRelease('8n', time);
+          if (p.hihat[s]) inst.hihat.triggerAttackRelease('32n', time);
+          
+          // Fixed Tone.Draw API for visual synchronization
+          Tone.Draw.schedule(() => {
+            step = s;
+            renderGrid();
+          }, time);
+        }, Array.from({ length: p.len }, (_, i) => i), '8n');
+        
+        seq.start(0);
+        Tone.getTransport().start();
+        playing = true;
+        render();
+      }
+
+      // The click handler must await Tone.start() directly to satisfy browser autoplay policies
+      async function togglePlay() {
+        if (playing) {
+          stopPlay();
+        } else {
+          await Tone.start(); 
+          startPlay();
+        }
+      }
+
+      function renderGrid() {
+        const p = buildPat(bahr);
+        const ROWS = [
+          { key: 'kick', label: 'Kick', sym: 'دم', desc: '1 — long syllable' },
+          { key: 'snare', label: 'Snare', sym: 'تك', desc: 'foot boundary' },
+          { key: 'hihat', label: 'Hi-hat', sym: 'سس', desc: '0 — short syllable' },
+        ];
+        const cs = Math.min(33, Math.max(20, Math.floor(552 / p.len)));
+        const gap = 3;
+        
+        let html = `<div style="overflow-x:auto">
+        <div style="min-width:${p.len * (cs + gap) + 96}px">`;
+        
+        ROWS.forEach(row => {
+          html += `<div style="display:flex;align-items:center;gap:${gap}px;margin-bottom:5px">
+          <div style="width:88px;flex-shrink:0;text-align:right;padding-right:10px">
+            <div style="font-size:10px;color:var(--color-text-secondary)">${row.label}</div>
+            <div style="font-size:16px;font-weight:500;color:var(--color-text-primary)">${row.sym}</div>
+          </div>
+          <div style="display:flex;gap:${gap}px">`;
+          
+          p[row.key].forEach((active, si) => {
+            const { foot } = p.meta[si];
+            const [bg, mid, dark] = CLR[foot];
+            const cur = si === step;
+            const border = p.bnd.has(si) ? `2px solid ${dark}` : `0.5px solid ${active ? dark : 'var(--color-border-tertiary)'}`;
+            const bg2 = cur ? 'var(--color-text-primary)' : active ? mid : 'var(--color-background-secondary)';
+            html += `<div class="drum-cell${cur ? ' playing' : ''}" style="width:${cs}px;height:${cs}px;background:${bg2};border:${border}"></div>`;
+          });
+          
+          html += '</div></div>';
+        });
+
+        // Boundary tick marks
+        html += `<div style="display:flex;align-items:center;gap:${gap}px;margin-top:2px">
+        <div style="width:88px;flex-shrink:0"></div>
+        <div style="display:flex;gap:${gap}px">`;
+        p.bits.forEach((_, si) => {
+          const isBnd = p.bnd.has(si);
+          html += `<div style="width:${cs}px;height:3px;border-radius:1px;flex-shrink:0;background:${isBnd ? 'var(--color-text-secondary)' : 'var(--color-border-tertiary)'}"></div>`;
+        });
+        html += '</div></div>';
+
+        // Syllable bit values
+        html += `<div style="display:flex;align-items:center;gap:${gap}px;margin-top:2px">
+        <div style="width:88px;flex-shrink:0;font-size:10px;color:var(--color-text-tertiary);text-align:right;padding-right:10px">bits</div>
+        <div style="display:flex;gap:${gap}px">`;
+        p.bits.forEach((b, si) => {
+          const isBnd = p.bnd.has(si);
+          html += `<div style="width:${cs}px;font-size:10px;text-align:center;flex-shrink:0;color:${isBnd ? 'var(--color-text-primary)' : 'var(--color-text-tertiary)'};font-weight:${isBnd ? 500 : 400}">${b}</div>`;
+        });
+        html += '</div></div>';
+        html += '</div></div>';
+        
+        document.getElementById('grid').innerHTML = html;
+      }
+
+      function render() {
+        const p = buildPat(bahr);
+        const groups = [];
+        let cur = null;
+        p.meta.forEach((m, i) => {
+          if (m.isFirst) {
+            cur = { foot: m.foot, steps: [] };
+            groups.push(cur);
+          }
+          cur.steps.push(i);
+        });
+
+        let html = `
+        <!-- Bahr selector -->
+        <div style="margin-bottom:18px">
+          <div style="font-size:11px;color:var(--color-text-secondary);margin-bottom:8px;direction:rtl">اختر البحر — select a metre</div>
+          <div style="display:flex;flex-wrap:wrap;gap:5px;direction:rtl">`;
+        
+        Object.keys(BAHUR).forEach(b => {
+          html += `<button class="bahr-btn${b === bahr ? ' sel' : ''}" style="border:0.5px solid ${b === bahr ? 'var(--color-border-primary)' : 'var(--color-border-tertiary)'}" onclick="setBahr('${b}')">${b}</button>`;
+        });
+        
+        html += `</div></div>
+
+        <!-- Tafila breakdown -->
+        <div style="margin-bottom:14px">
+          <div style="font-size:11px;color:var(--color-text-secondary);margin-bottom:7px;direction:rtl">التفاعيل — prosodic feet (■ = long/stressed, □ = short/unstressed)</div>
+          <div style="display:flex;gap:6px;flex-wrap:wrap;direction:rtl">`;
+        
+        groups.forEach(g => {
+          const [bg, mid, dark] = CLR[g.foot];
+          html += `<div style="background:${bg};border:0.5px solid ${dark};border-radius:8px;padding:6px 10px;display:flex;flex-direction:column;align-items:center;gap:5px">
+            <span style="font-size:12px;color:${dark};font-weight:500">${g.foot}</span>
+            <div style="display:flex;gap:3px">`;
+          T[g.foot].forEach(b => {
+            html += `<div style="width:9px;height:9px;border-radius:2px;background:${b ? mid : 'transparent'};border:0.5px solid ${mid}"></div>`;
+          });
+          html += '</div></div>';
+        });
+        
+        html += `</div></div>
+
+        <!-- Grid element -->
+        <div id="grid"></div>
+
+        <!-- Playback Controls -->
+        <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-top:14px">
+          <button id="playbtn" onclick="togglePlay()" style="padding:8px 20px;font-size:14px;font-weight:500;cursor:pointer;border-radius:8px;background:${playing ? 'var(--color-background-danger)' : 'var(--color-background-info)'};color:${playing ? 'var(--color-text-danger)' : 'var(--color-text-info)'};border:0.5px solid ${playing ? 'var(--color-border-danger)' : 'var(--color-border-info)'}">
+            ${playing ? '⏹ Stop' : '▶ Play'}
+          </button>
+          <label style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--color-text-secondary)">
+            BPM
+            <input type="range" min="60" max="200" step="1" value="${bpm}" onchange="setBpm(this.value)" style="width:90px">
+            <span style="font-weight:500;color:var(--color-text-primary);min-width:30px">${bpm}</span>
+          </label>
+          <span style="font-size:11px;color:var(--color-text-secondary)">${p.len} steps · ${BAHUR[bahr].feet.length} feet</span>
+        </div>
+
+        <!-- Key/Legend -->
+        <div style="margin-top:16px;padding:10px 14px;background:var(--color-background-secondary);border-radius:8px;font-size:11px;color:var(--color-text-secondary);line-height:1.8;direction:rtl">
+          <b style="color:var(--color-text-primary)">Kick دم</b> = bit 1 (stressed / long syllable) &nbsp;·&nbsp;
+          <b style="color:var(--color-text-primary)">Snare تك</b> = foot boundary (starts each تفعيلة) &nbsp;·&nbsp;
+          <b style="color:var(--color-text-primary)">Hi-hat سس</b> = bit 0 (unstressed / short syllable) &nbsp;·&nbsp;
+          الألوان تميز التفاعيل المختلفة &nbsp;·&nbsp; <span style="font-style:italic">تعكس الأنماط البنية العروضية النظرية — لا الإيقاعات الموسيقية التقليدية</span>
+        </div>
+        <!-- Ziḥāf disclosure -->
+        <div style="margin-top:8px;padding:8px 14px;background:var(--color-background-secondary);border-radius:8px;font-size:10px;color:var(--color-text-tertiary);direction:rtl">
+          ⚠ تعرض هذه الأداة الأشكال النظرية الأساسية للبحور دون تطبيق الزحافات والعلل. — Patterns shown are the canonical base forms; ziḥāf and ʿilal (poetic license variations) are not modelled.
+        </div>`;
+
+        document.getElementById('root').innerHTML = html;
+        renderGrid();
+      }
+
+      function setBahr(b) {
+        if (playing) stopPlay();
+        bahr = b;
+        bpm = BAHUR[b].defaultBpm;
+        step = -1;
+        render();
+      }
+
+      function setBpm(v) {
+        bpm = parseInt(v);
+        if (playing) Tone.getTransport().bpm.value = bpm;
+        const bpmDisplay = document.querySelector('#root label span');
+        if (bpmDisplay) bpmDisplay.textContent = bpm;
+      }
+
+      render();
+    </script>
+  </body>
+</html>
