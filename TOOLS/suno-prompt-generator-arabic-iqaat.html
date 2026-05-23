@@ -4,51 +4,51 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>الإيقاعات العربية — مولّد بروبتات Suno</title>
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=DM+Sans:ital,opsz,wght@0,9..40,300..700;1,9..40,300..700&family=Fraunces:ital,opsz,wght@0,9..144,700;1,9..144,700&display=swap" rel="stylesheet">
 <style>
 :root {
-  --font-sans: 'Cairo', system-ui, -apple-system, sans-serif;
-  --font-mono: 'IBM Plex Mono', ui-monospace, Menlo, monospace;
+  --font-sans: 'Cairo', 'DM Sans', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, Menlo, monospace;
 
-  /* Palette */
-  --bg:          #faf8f4;
-  --bg-card:     #ffffff;
-  --bg-sub:      #f5f3ef;
-  --bg-info:     #eff6ff;
-  --bg-warn:     #fffbeb;
-  --bg-success:  #f0fdf4;
-  --bg-amber:    #fffbeb;
+  /* Sound University design tokens */
+  --bg:          #0f1117;
+  --bg-card:     #161b27;
+  --bg-sub:      #1e2535;
+  --bg-info:     #0d1a2e;
+  --bg-warn:     #1c1608;
+  --bg-success:  #0a1e14;
+  --bg-amber:    #1c1608;
 
-  --border:      #e5e1da;
-  --border-sub:  #ede9e2;
-  --border-info: #bfdbfe;
-  --border-warn: #fde68a;
-  --border-ok:   #bbf7d0;
+  --border:      #2a3348;
+  --border-sub:  #3a4a64;
+  --border-info: #1a3555;
+  --border-warn: #3d3010;
+  --border-ok:   #1a4030;
 
-  --txt:         #1c1917;
-  --txt-2:       #57534e;
-  --txt-3:       #a8a29e;
-  --txt-info:    #1d4ed8;
-  --txt-warn:    #b45309;
-  --txt-ok:      #15803d;
+  --txt:         #d4dce8;
+  --txt-2:       #9aacbe;
+  --txt-3:       #5a6a80;
+  --txt-info:    #6eb5ff;
+  --txt-warn:    #e8c87d;
+  --txt-ok:      #26c490;
 
-  /* Star tier colors */
-  --star-3-bg:   #fffbeb;
-  --star-3-bd:   #fde68a;
-  --star-3-tx:   #92400e;
-  --star-2-bg:   #eff6ff;
-  --star-2-bd:   #bfdbfe;
-  --star-2-tx:   #1d4ed8;
-  --star-1-bg:   #f5f3ef;
-  --star-1-bd:   #e5e1da;
-  --star-1-tx:   #57534e;
+  /* Star tier — gold / blue / muted */
+  --star-3-bg:   #1c1608;
+  --star-3-bd:   #3d3010;
+  --star-3-tx:   #e8c87d;
+  --star-2-bg:   #0d1a2e;
+  --star-2-bd:   #1a3555;
+  --star-2-tx:   #6eb5ff;
+  --star-1-bg:   #1e2535;
+  --star-1-bd:   #2a3348;
+  --star-1-tx:   #7a8aa0;
 
   --radius-sm:   5px;
   --radius-md:   8px;
   --radius-lg:   14px;
   --radius-xl:   20px;
-  --shadow-card: 0 1px 3px rgba(0,0,0,0.06), 0 2px 8px rgba(0,0,0,0.04);
-  --shadow-hover: 0 6px 20px rgba(0,0,0,0.10);
+  --shadow-card: 0 1px 4px rgba(0,0,0,0.35), 0 2px 10px rgba(0,0,0,0.25);
+  --shadow-hover: 0 6px 24px rgba(0,0,0,0.5);
 }
 
 *{box-sizing:border-box;margin:0;padding:0}
@@ -82,8 +82,9 @@ body{
 .header-title{
   font-size:22px;
   font-weight:700;
-  color:var(--txt);
+  color:#eef2f8;
   line-height:1.3;
+  font-family:"Fraunces",Georgia,serif;
 }
 .header-sub{
   font-size:12px;
@@ -93,8 +94,8 @@ body{
   font-family:var(--font-mono);
 }
 .suno-badge{
-  background:var(--txt);
-  color:#fff;
+  background:var(--star-3-bg);
+  color:var(--star-3-tx);
   font-size:11px;
   font-weight:600;
   padding:4px 12px;
@@ -176,7 +177,7 @@ body{
   line-height:1.6;
 }
 .fb:hover:not(.on){background:var(--bg-sub);color:var(--txt)}
-.fb.on.ts-filter{background:var(--txt);color:#fff;border-color:var(--txt);font-weight:600}
+.fb.on.ts-filter{background:var(--star-3-bg);color:var(--star-3-tx);border-color:var(--star-3-bd);font-weight:600}
 .fb.on.meter-filter{background:var(--star-3-bg);color:var(--star-3-tx);border-color:var(--star-3-bd);font-weight:600}
 
 /* ───── Result bar ───── */
@@ -365,7 +366,7 @@ body{
 /* Copy button */
 .cbtn{
   border:0.5px solid var(--border);
-  background:var(--bg-card);
+  background:var(--bg-sub);
   color:var(--txt-2);
   font-size:11px;
   padding:3px 11px;
@@ -843,5 +844,26 @@ renderFilters();
 renderGrid();
 applyFilters();
 </script>
+
+<a href="../index.html" title="الرئيسية" style="
+  position:fixed;
+  bottom:1.4rem;
+  left:1.4rem;
+  z-index:9999;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:2.4rem;
+  height:2.4rem;
+  border-radius:50%;
+  background:#161b27;
+  border:1px solid #2a3348;
+  color:#e8c87d;
+  font-size:1.1rem;
+  text-decoration:none;
+  box-shadow:0 2px 10px rgba(0,0,0,0.4);
+  transition:background 0.18s,border-color 0.18s,box-shadow 0.18s;
+" onmouseover="this.style.background='#1e2535';this.style.borderColor='#3a4a64';this.style.boxShadow='0 4px 16px rgba(0,0,0,0.55)'"
+   onmouseout="this.style.background='#161b27';this.style.borderColor='#2a3348';this.style.boxShadow='0 2px 10px rgba(0,0,0,0.4)'">⌂</a>
 </body>
 </html>
