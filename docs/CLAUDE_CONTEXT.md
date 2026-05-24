@@ -26,6 +26,8 @@ Sound_University_Website/           ← project root / git root
 ├── index.html                      ← GENERATED — do not hand-edit
 ├── Course_Philosophy.html          ← standalone page (lives at root, not inside any scanned folder)
 ├── README.md
+├── sync.py                         ← build automation entry point (do not hand-edit)
+├── sync.toml                       ← build automation config (edit this to add steps/routines)
 │
 ├── HTML_LESSONS/                   ← GENERATED lesson pages
 │   ├── LESSON_1.html … LESSON_7.html
@@ -55,17 +57,25 @@ Sound_University_Website/           ← project root / git root
 │
 └── scripts/
     ├── generate_homepage.py
-    └── html_manipulator.py         ← note: filename has a typo ("main" not "mani")
+    └── html_manipulator.py
 ```
 
 ---
 
 ## 3. Tools & Scripts
 
-### 3a. `convert_md2html` — External CLI (not in project)
+### 3a. `convert_md2html` — PowerShell profile function (not a system executable)
 
-A system-installed executable (not a project file). Converts `.md` files to
-fully styled, self-contained HTML using the project's design language.
+Defined in `$PROFILE` as:
+```powershell
+function convert_md2html {
+    python C:\Users\DELL\Jupyter_Notebooks\Useful_Functions_and_Utilities\convert_md2html.py $args
+}
+```
+
+Converts `.md` files to fully styled, self-contained HTML using the project's design language.
+Because it is a profile function (not a PATH executable), any script invoking it must run
+via PowerShell with the profile loaded — see `sync.py` / `sync.toml` for how this is handled.
 
 **Invocation examples:**
 
@@ -161,8 +171,6 @@ Lesson cards auto-extract `<title>` from each HTML file; `LESSON_META` only over
 
 ### 3c. `scripts/html_manipulator.py`
 
-> ⚠️ Note: the filename contains a typo — `mainpulator`, not `manipulator`.
-
 Post-processing DOM tool (BeautifulSoup). Run **after** `convert_md2html`.
 Operations are applied in sequence. Requires: `pip install beautifulsoup4`
 
@@ -205,6 +213,65 @@ Common use: `"h1#_1"` removes the duplicate H1 `convert_md2html` injects.
 .lyrics-card audio { display: block; width: 100%; background: var(--surface2); padding: 0.75rem 1rem; border-bottom: 1px solid var(--border); }
 .lyrics-card pre { margin: 0 !important; border-radius: 0 !important; border-top: none; }
 ```
+
+---
+
+### 3d. `sync.py` + `sync.toml` — Build automation
+
+Single entry point for all build and deploy workflows. `sync.py` reads `sync.toml` at
+runtime — **never edit `sync.py` directly**. All configuration lives in `sync.toml`.
+
+Requires Python 3.11+ (uses `tomllib` from stdlib). On older Python: `pip install tomli`.
+
+**Invocation:**
+```bash
+python sync.py                          # default routine: 'local' (full rebuild, no push)
+python sync.py full                     # full rebuild + git commit + push
+python sync.py lessons                  # lessons only (convert + post-process)
+python sync.py music                    # music only (convert + post-process)
+python sync.py push                     # git commit + push only, no rebuild
+python sync.py full --message "..."     # override the default commit message
+python sync.py --list                   # print all available routines and their steps
+```
+
+**Built-in routines:**
+
+| Routine | Steps | Pushes? |
+|---|---|---|
+| `local` *(default)* | convert lessons + music → post-process both → homepage | No |
+| `full` | same as `local` + git commit + push | Yes |
+| `lessons` | convert lessons → post-process lessons | No |
+| `music` | convert music → post-process music | No |
+| `push` | git commit + push only | Yes |
+
+**`sync.toml` structure:**
+
+```toml
+[settings]
+default_routine = "local"
+default_message = "Update website"
+
+[steps.my_step]
+label = "Human-readable label shown in logs"
+cmd   = "the shell command to run"
+shell = "powershell"   # optional — only needed for PowerShell profile functions
+
+[routines.my_routine]
+description = "Shown in --list output"
+steps = ["step_one", "step_two"]
+```
+
+**To add a new step:** add a `[steps.name]` block with `label` and `cmd`.
+**To add a new routine:** add a `[routines.name]` block with a `steps` list referencing step names.
+**PowerShell profile functions** (e.g. `convert_md2html`) require `shell = "powershell"` on their
+step — this makes `sync.py` source `$PROFILE` before running the command.
+
+**Implementation notes:**
+- All commands run from the project root regardless of where `sync.py` is invoked
+- `PYTHONIOENCODING=utf-8` and `PYTHONUTF8=1` are injected into every subprocess environment
+  (required on Windows to handle Arabic text and Unicode symbols in child script output)
+- `{message}` in a `cmd` string is replaced at runtime with the commit message
+- Failure stops the run immediately with full stderr output and the step name
 
 ---
 
@@ -266,28 +333,20 @@ The homepage uses fixed RTL CSS (no ternaries) since it's always Arabic.
 
 ## 6. Deployment Workflow
 
+**Standard workflow — use `sync.py`:**
+
 ```bash
-# 1. Author/edit source Markdown in LESSONS/, MUSIC/, or PHILOSOPHY/
+# Edit source Markdown in LESSONS/, MUSIC/, or PHILOSOPHY/, then:
 
-# 2. Regenerate lesson HTML
-convert_md2html ./LESSONS -o ./HTML_LESSONS --lang ar --prose --home-url ../index.html
+python sync.py        # full local rebuild (no push) — verify in browser first
+python sync.py full   # rebuild + commit + push to GitHub
+```
 
-# 3. Regenerate music HTML
-convert_md2html ./MUSIC -o ./HTML_MUSIC --lang ar --prose --home-url ../index.html
+**Manual steps (for operations not yet in sync.toml):**
 
-# 4. Post-process music pages (pair audio with lyrics blocks)
-python scripts/html_manipulator.py HTML_MUSIC/ --move-audio
-
-# 5. Regenerate standalone root pages (e.g. Course Philosophy)
+```bash
+# Standalone root pages (e.g. Course Philosophy) — run manually, not in sync.py
 convert_md2html ./PHILOSOPHY -o . --lang ar --prose --home-url ./index.html
-
-# 6. Regenerate homepage
-python scripts/generate_homepage.py
-
-# 7. Commit and push
-git add .
-git commit -m "update website"
-git push
 ```
 
 GitHub Pages redeploys automatically on push to `main`.
@@ -298,10 +357,10 @@ GitHub Pages redeploys automatically on push to `main`.
 
 | Convention | Rationale |
 |---|---|
-| `index.html` is GENERATED | Never hand-edit; always regenerate via `generate_homepage.py` |
+| `index.html` is GENERATED | Never hand-edit; always regenerate via `generate_homepage.py` or `sync.py` |
+| `sync.py` is GENERATED | Never hand-edit; all config lives in `sync.toml` |
 | `Course_Philosophy.html` lives at root | Not inside any scanned folder — prevents it appearing as a section card |
-| `convert_md2html` is an external CLI | Not a project file; no path to maintain or version |
-| `html_manipulator.py` filename typo | Intentional preservation — changing it would break any documented invocations |
+| `convert_md2html` is a PowerShell profile function | Not a PATH executable — steps invoking it need `shell = "powershell"` in `sync.toml` |
 | `--home-url` is a CLI flag, not hardcoded | Keeps `convert_md2html` generic across different deploy contexts |
 | `HTML_` prefix = Markdown-converted output | `HTML_LESSONS/`, `HTML_MUSIC/` contain generated HTML. `TOOLS/` has no `HTML_` prefix because files are native HTML, not converted from Markdown |
 | `TOOLS/` filenames use hyphens | URL-friendly; consistent across all three tool files |
@@ -313,10 +372,10 @@ GitHub Pages redeploys automatically on push to `main`.
 | Lesson sort: numeric then alpha suffix | `LESSON_2A` < `LESSON_2B`; `LESSON_06` sorts as 6, not 60 |
 | Teaser prose threshold `> 100` chars | Automatically skips short headings/subtitles when extracting philosophy preview |
 | `ROOT = Path(__file__).parent.parent` | `generate_homepage.py` lives in `scripts/`; this resolves to project root regardless of working directory |
+| UTF-8 enforced in subprocesses | `sync.py` sets `PYTHONIOENCODING=utf-8` + `PYTHONUTF8=1` for all child processes — required on Windows for Arabic text |
 
 ---
 
 ## 8. To Do
 
 > Remove items once completed.
-
