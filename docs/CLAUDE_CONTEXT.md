@@ -55,7 +55,7 @@ Sound_University_Website/           ← project root / git root
 │
 └── scripts/
     ├── generate_homepage.py
-    └── html_mainpulator.py         ← note: filename has a typo ("main" not "mani")
+    └── html_manipulator.py         ← note: filename has a typo ("main" not "mani")
 ```
 
 ---
@@ -159,7 +159,7 @@ Lesson cards auto-extract `<title>` from each HTML file; `LESSON_META` only over
 
 ---
 
-### 3c. `scripts/html_mainpulator.py`
+### 3c. `scripts/html_manipulator.py`
 
 > ⚠️ Note: the filename contains a typo — `mainpulator`, not `manipulator`.
 
@@ -169,19 +169,19 @@ Operations are applied in sequence. Requires: `pip install beautifulsoup4`
 **Invocation:**
 ```bash
 # Single file in-place
-python scripts/html_mainpulator.py HTML_MUSIC/LESSON_2A.html --move-audio
+python scripts/html_manipulator.py HTML_MUSIC/LESSON_2A.html --move-audio
 
 # Whole directory in-place
-python scripts/html_mainpulator.py HTML_MUSIC/ --move-audio
+python scripts/html_manipulator.py HTML_MUSIC/ --move-audio
 
 # Dry run (no writes)
-python scripts/html_mainpulator.py HTML_MUSIC/ --move-audio --dry-run
+python scripts/html_manipulator.py HTML_MUSIC/ --move-audio --dry-run
 
 # Write to separate output folder
-python scripts/html_mainpulator.py HTML_MUSIC/ --move-audio -o HTML_MUSIC/out/
+python scripts/html_manipulator.py HTML_MUSIC/ --move-audio -o HTML_MUSIC/out/
 
 # Remove elements by CSS selector
-python scripts/html_mainpulator.py HTML_MUSIC/ --remove-tag "h1#_1"
+python scripts/html_manipulator.py HTML_MUSIC/ --remove-tag "h1#_1"
 ```
 
 **Operations:**
@@ -276,7 +276,7 @@ convert_md2html ./LESSONS -o ./HTML_LESSONS --lang ar --prose --home-url ../inde
 convert_md2html ./MUSIC -o ./HTML_MUSIC --lang ar --prose --home-url ../index.html
 
 # 4. Post-process music pages (pair audio with lyrics blocks)
-python scripts/html_mainpulator.py HTML_MUSIC/ --move-audio
+python scripts/html_manipulator.py HTML_MUSIC/ --move-audio
 
 # 5. Regenerate standalone root pages (e.g. Course Philosophy)
 convert_md2html ./PHILOSOPHY -o . --lang ar --prose --home-url ./index.html
@@ -301,7 +301,7 @@ GitHub Pages redeploys automatically on push to `main`.
 | `index.html` is GENERATED | Never hand-edit; always regenerate via `generate_homepage.py` |
 | `Course_Philosophy.html` lives at root | Not inside any scanned folder — prevents it appearing as a section card |
 | `convert_md2html` is an external CLI | Not a project file; no path to maintain or version |
-| `html_mainpulator.py` filename typo | Intentional preservation — changing it would break any documented invocations |
+| `html_manipulator.py` filename typo | Intentional preservation — changing it would break any documented invocations |
 | `--home-url` is a CLI flag, not hardcoded | Keeps `convert_md2html` generic across different deploy contexts |
 | `HTML_` prefix = Markdown-converted output | `HTML_LESSONS/`, `HTML_MUSIC/` contain generated HTML. `TOOLS/` has no `HTML_` prefix because files are native HTML, not converted from Markdown |
 | `TOOLS/` filenames use hyphens | URL-friendly; consistent across all three tool files |

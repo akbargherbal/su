@@ -37,11 +37,11 @@ shell = "powershell"   # convert_md2html is a PowerShell profile function
 
 [steps.manipulate_lessons]
 label = "Post-process HTML_LESSONS (move-audio)"
-cmd   = "python scripts/html_mainpulator.py HTML_LESSONS/ --move-audio"
+cmd   = "python scripts/html_manipulator.py HTML_LESSONS/ --move-audio"
 
 [steps.manipulate_music]
 label = "Post-process HTML_MUSIC (move-audio)"
-cmd   = "python scripts/html_mainpulator.py HTML_MUSIC/ --move-audio"
+cmd   = "python scripts/html_manipulator.py HTML_MUSIC/ --move-audio"
 
 [steps.homepage]
 label = "Regenerate index.html"
