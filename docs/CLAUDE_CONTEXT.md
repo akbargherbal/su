@@ -320,6 +320,3 @@ GitHub Pages redeploys automatically on push to `main`.
 
 > Remove items once completed.
 
-- **Theme `TOOLS/` apps to match website design** — the three tools were built independently and use their own colour schemes. Goal is visual consistency with the site's dark theme and design tokens (colours, fonts). No structural overhaul — CSS theming only.
-- **Add HTML boilerplate to `arabic-poetic-meters-and-iqaat-guide.html`** — currently lacks proper `<!DOCTYPE>`, `<html>`, `<head>` structure. Browser renders it fine but it should be clean.
-

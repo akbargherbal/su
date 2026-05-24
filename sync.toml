@@ -1,0 +1,99 @@
+# sync.toml — Sound University build automation
+# ─────────────────────────────────────────────────────────────────
+# This file is the only thing you should ever edit.
+# sync.py reads it at runtime — no code changes needed.
+#
+# HOW IT WORKS:
+#   1. Define every individual action in [steps.*]
+#   2. Compose routines in [routines.*] by referencing step names
+#   3. Run:  python sync.py [routine]   (default: local)
+# ─────────────────────────────────────────────────────────────────
+
+
+# ── Global settings ───────────────────────────────────────────────
+[settings]
+default_routine = "local"
+default_message = "Update website"
+
+
+# ── Step registry ─────────────────────────────────────────────────
+# Each step has:
+#   label  — human-readable name shown in log output
+#   cmd    — shell command to run (executed from project root)
+#
+# Special placeholder:
+#   {message} — replaced at runtime with the git commit message
+#               (from --message flag or default_message above)
+
+[steps.convert_lessons]
+label = "Convert LESSONS → HTML_LESSONS"
+cmd   = "convert_md2html ./LESSONS -o ./HTML_LESSONS --lang ar --prose --home-url ../index.html"
+shell = "powershell"   # convert_md2html is a PowerShell profile function
+
+[steps.convert_music]
+label = "Convert MUSIC → HTML_MUSIC"
+cmd   = "convert_md2html ./MUSIC -o ./HTML_MUSIC --lang ar --prose --home-url ../index.html"
+shell = "powershell"   # convert_md2html is a PowerShell profile function
+
+[steps.manipulate_lessons]
+label = "Post-process HTML_LESSONS (move-audio)"
+cmd   = "python scripts/html_mainpulator.py HTML_LESSONS/ --move-audio"
+
+[steps.manipulate_music]
+label = "Post-process HTML_MUSIC (move-audio)"
+cmd   = "python scripts/html_mainpulator.py HTML_MUSIC/ --move-audio"
+
+[steps.homepage]
+label = "Regenerate index.html"
+cmd   = "python scripts/generate_homepage.py"
+
+[steps.git_push]
+label = "Commit and push to GitHub"
+cmd   = "git add . && git commit -m \"{message}\" && git push"
+
+
+# ── Routines (presets) ────────────────────────────────────────────
+# Each routine has:
+#   description — shown in --list output
+#   steps       — ordered list of step names from the registry above
+
+[routines.local]
+description = "Full rebuild — no push to GitHub"
+steps = [
+    "convert_lessons",
+    "convert_music",
+    "manipulate_lessons",
+    "manipulate_music",
+    "homepage",
+]
+
+[routines.full]
+description = "Full rebuild + commit and push to GitHub"
+steps = [
+    "convert_lessons",
+    "convert_music",
+    "manipulate_lessons",
+    "manipulate_music",
+    "homepage",
+    "git_push",
+]
+
+[routines.lessons]
+description = "Lessons only — convert + post-process, no push"
+steps = [
+    "convert_lessons",
+    "manipulate_lessons",
+]
+
+[routines.music]
+description = "Music only — convert + post-process, no push"
+steps = [
+    "convert_music",
+    "manipulate_music",
+]
+
+[routines.push]
+description = "Git commit and push only — no rebuild"
+steps = [
+    "git_push",
+]
