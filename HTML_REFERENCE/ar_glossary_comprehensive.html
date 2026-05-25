@@ -1,0 +1,1068 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>جامعة الصوت — المسرد الشامل</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;1,9..144,300&family=JetBrains+Mono:wght@400;500&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ── Reset & base ──────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      /* Palette — dark editorial */
+      --bg:          #0f1117;
+      --surface:     #161b27;
+      --surface2:    #1e2535;
+      --border:      #2a3348;
+      --accent:      #e8c87d;        /* warm gold */
+      --accent2:     #6eb5ff;        /* sky blue for links / inline code */
+      --text:        #d4dce8;
+      --text-muted:  #7a8aa0;
+      --text-strong: #eef2f8;
+
+      /* Typography */
+      --font-body:   'DM Sans', sans-serif;
+      --font-head:   'Fraunces', Georgia, serif;
+      --font-mono:   'JetBrains Mono', 'Fira Code', monospace;
+      --font-prose:  'Amiri', Georgia, serif;
+
+      /* Layout */
+      --content-max: 860px;
+      --sidebar-w:   260px;
+      --gap:         2rem;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-body);
+      font-size: clamp(16px, 1.1vw, 18px);
+      line-height: 1.8;
+      text-align: right;
+      -webkit-font-smoothing: antialiased;
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* ── Progress bar ──────────────────────────────────────── */
+    #progress {
+      position: fixed;
+      top: 0; left: 0;
+      height: 3px;
+      width: 0%;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      z-index: 1000;
+      transition: width 0.1s linear;
+    }
+
+    /* ── Sidebar TOC ───────────────────────────────────────── */
+    #sidebar {
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: var(--sidebar-w);
+      height: 100vh;
+      overflow-y: auto;
+      background: var(--surface);
+      border-left: 1px solid var(--border);
+      padding: 2rem 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      z-index: 100;
+      scrollbar-width: thin;
+      scrollbar-color: var(--border) transparent;
+    }
+
+    #sidebar-title {
+      font-family: var(--font-head);
+      font-size: 0.75rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1rem;
+    }
+
+    #toc { list-style: none; }
+    #toc li { line-height: 1.4; }
+    #toc a {
+      display: block;
+      padding: 0.25rem 0.5rem;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      text-decoration: none;
+      border-radius: 4px;
+      transition: background 0.15s, color 0.15s;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    #toc a:hover, #toc a.active {
+      background: var(--surface2);
+      color: var(--text-strong);
+    }
+    #toc .toc-h2 { padding-right: 0.5rem; }
+    #toc .toc-h3 { padding-right: 1.25rem; font-size: 0.77rem; }
+    #toc .toc-h4 { padding-right: 2rem;   font-size: 0.73rem; color: var(--border); }
+
+    /* ── Main content ──────────────────────────────────────── */
+    #main {
+      margin-right: var(--sidebar-w);
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      padding: 4rem var(--gap) 6rem;
+    }
+
+    article {
+      width: 100%;
+      max-width: var(--content-max);
+    }
+
+    /* ── Header strip ──────────────────────────────────────── */
+    #doc-header {
+      margin-bottom: 3.5rem;
+      padding-bottom: 2rem;
+      border-bottom: 1px solid var(--border);
+      position: relative;
+    }
+    #doc-header::before {
+      content: '';
+      position: absolute;
+      bottom: -1px;
+      right: 0;
+      width: 80px;
+      height: 1px;
+      background: var(--accent);
+    }
+    #doc-title {
+      font-family: var(--font-head);
+      font-size: clamp(2rem, 3.5vw, 3.2rem);
+      font-weight: 600;
+      color: var(--text-strong);
+      line-height: 1.15;
+      letter-spacing: -0.01em;
+    }
+    #doc-meta {
+      margin-top: 0.6rem;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+    }
+
+    /* ── Headings ──────────────────────────────────────────── */
+    h1, h2, h3, h4, h5, h6 {
+      font-family: var(--font-head);
+      color: var(--text-strong);
+      line-height: 1.2;
+      font-weight: 600;
+      scroll-margin-top: 2rem;
+    }
+    h1 { font-size: clamp(1.7rem, 2.5vw, 2.4rem); margin: 3rem 0 1.2rem; }
+    h2 {
+      font-size: clamp(1.35rem, 2vw, 1.85rem);
+      margin: 2.8rem 0 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+    h3 { font-size: clamp(1.1rem, 1.5vw, 1.4rem); margin: 2.2rem 0 0.8rem; }
+    h4 { font-size: 1.05rem; margin: 1.8rem 0 0.6rem; color: var(--accent); }
+    h5, h6 { font-size: 0.95rem; margin: 1.5rem 0 0.5rem; font-weight: 500; }
+
+    /* ── Paragraphs & text ─────────────────────────────────── */
+    p { margin-bottom: 1.25rem; }
+    strong { color: var(--text-strong); font-weight: 600; }
+    em { font-style: italic; color: var(--accent); }
+    del { color: var(--text-muted); }
+    mark {
+      background: rgba(232, 200, 125, 0.2);
+      color: var(--accent);
+      border-radius: 2px;
+      padding: 0 3px;
+    }
+
+    /* ── Links ─────────────────────────────────────────────── */
+    a {
+      color: var(--accent2);
+      text-decoration: none;
+      border-bottom: 1px solid transparent;
+      transition: border-color 0.15s;
+    }
+    a:hover { border-bottom-color: var(--accent2); }
+
+    /* ── Lists ─────────────────────────────────────────────── */
+    ul, ol {
+      margin: 0.75rem 0 1.25rem;
+      padding-right: 1.8rem;
+    }
+    li { margin-bottom: 0.4rem; }
+    li > ul, li > ol { margin-bottom: 0; }
+    ul li::marker { color: var(--accent); }
+    ol li::marker { color: var(--accent); font-family: var(--font-mono); font-size: 0.85em; }
+
+    /* ── Inline code ───────────────────────────────────────── */
+    /* :not(pre) guard prevents this rule from bleeding into plain
+       fenced blocks where <code> is a direct child of <pre>.      */
+    :not(pre) > code:not([class]) {
+      font-family: var(--font-mono);
+      font-size: 0.85em;
+      background: var(--surface2);
+      color: var(--accent2);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 0.15em 0.45em;
+    }
+
+    /* ── Code blocks (Pygments) ────────────────────────────── */
+    .codehilite {
+      background: #111827 !important;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+      margin: 1.75rem 0;
+      position: relative;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.4);
+    }
+
+    .code-wrap {
+      position: relative;
+    }
+
+    .code-lang {
+      position: absolute;
+      top: 0;
+      right: 0;
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      padding: 0.5rem 1rem;
+      background: rgba(255,255,255,0.03);
+      border-bottom: 1px solid var(--border);
+      border-left: 1px solid var(--border);
+      border-bottom-left-radius: 6px;
+      user-select: none;
+    }
+
+    .copy-btn {
+      position: absolute;
+      top: 0.5rem;
+      left: 0.75rem;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      padding: 0.25rem 0.65rem;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s;
+      z-index: 2;
+    }
+    .copy-btn:hover { background: var(--border); color: var(--text-strong); }
+    .copy-btn.copied { color: #7dffaa; border-color: #7dffaa44; }
+
+    .codehilite pre {
+      margin: 0 !important;
+      padding: 2.8rem 1.5rem 1.5rem !important;
+      font-family: var(--font-mono) !important;
+      font-size: clamp(0.78rem, 0.9vw, 0.88rem) !important;
+      line-height: 1.7 !important;
+      overflow-x: auto;
+      tab-size: 4;
+    }
+
+    /* ── Plain fenced blocks / Prose blocks ───────────────── */
+        /* ── Prose blocks (--prose / --no-code mode) ──────────────
+       Replaces the default monospace pre card with a literary
+       typography treatment using Amiri for Arabic & Latin.
+    ─────────────────────────────────────────────────────────── */
+
+    pre:not(.codehilite pre) {
+      background:    var(--surface);          /* softer card  */
+      border:        1px solid var(--border);
+      border-right: 3px solid var(--accent); /* accent spine */
+      border-radius: 12px;
+      padding:       2rem 2.5rem;             /* reduced top padding since label is removed */
+      overflow-x:    visible;
+      white-space:   pre-wrap;
+      word-break:    break-word;
+
+      /* Literary typography */
+      font-family:  'Amiri', Georgia, serif;
+      font-size:    1.15rem;
+      line-height:  2.4;                      /* diacritics need air */
+      text-align:   right;
+      direction:    rtl;
+
+      margin: 2rem 0;
+      position: relative;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.25);
+    }
+
+    /* Ensure nested <code> inside prose pre is not re-styled by
+       the inline-code rule — colour and decoration inherit cleanly */
+    pre:not(.codehilite pre) code {
+      background:    none !important;
+      border:        none !important;
+      padding:       0    !important;
+      color:         inherit !important;
+      font-family:   inherit !important;
+      font-size:     inherit !important;
+      border-radius: 0    !important;
+    }
+
+    /* ── Blockquotes ───────────────────────────────────────── */
+    blockquote {
+      border-right: 3px solid var(--accent);
+      margin: 1.5rem 0;
+      padding: 1rem 1.5rem;
+      background: var(--surface2);
+      border-radius: 0 8px 8px 0;
+      color: var(--text-muted);
+      font-style: italic;
+    }
+    blockquote p { margin-bottom: 0; }
+
+    /* ── Tables ────────────────────────────────────────────── */
+    .table-wrap { overflow-x: auto; margin: 1.75rem 0; border-radius: 10px; border: 1px solid var(--border); }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+    }
+    thead {
+      background: var(--surface2);
+    }
+    th {
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      color: var(--accent);
+      padding: 0.8rem 1.1rem;
+      text-align: right;
+      border-bottom: 1px solid var(--border);
+      font-weight: 500;
+    }
+    td {
+      padding: 0.7rem 1.1rem;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: rgba(255,255,255,0.02); }
+
+    /* ── Horizontal rule ───────────────────────────────────── */
+    hr {
+      border: none;
+      height: 1px;
+      background: linear-gradient(90deg, var(--accent), transparent);
+      margin: 2.5rem 0;
+    }
+
+    /* ── Task lists ────────────────────────────────────────── */
+    .task-list-item input[type="checkbox"] {
+      accent-color: var(--accent);
+      margin-left: 0.5rem;
+    }
+
+    /* ── Images ────────────────────────────────────────────── */
+    img {
+      max-width: 100%;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      display: block;
+      margin: 1.5rem auto;
+    }
+
+    /* ── Footnotes ─────────────────────────────────────────── */
+    .footnote {
+      border-top: 1px solid var(--border);
+      margin-top: 3rem;
+      padding-top: 1rem;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+    }
+
+    /* ── Back to top ───────────────────────────────────────── */
+    #back-top {
+      position: fixed;
+      bottom: 2rem;
+      left: 2rem;
+      width: 40px;
+      height: 40px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 1.1rem;
+      opacity: 0;
+      transform: translateY(8px);
+      transition: opacity 0.2s, transform 0.2s, color 0.15s;
+      z-index: 200;
+    }
+    #back-top.visible { opacity: 1; transform: translateY(0); }
+    #back-top:hover { color: var(--accent); border-color: var(--accent); }
+
+    /* ── Home button ────────────────────────────────────────── */
+    #home-btn {
+      position: fixed;
+      bottom: 5.5rem;
+      left: 2rem;
+      width: 40px;
+      height: 40px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 1.1rem;
+      opacity: 1;
+      transition: color 0.15s, border-color 0.15s;
+      z-index: 200;
+    }
+    #home-btn:hover { color: var(--accent); border-color: var(--accent); }
+
+    /* ── Sidebar toggle (hidden on wide screens) ───────────── */
+    #sidebar-toggle {
+      display: none;
+      position: fixed;
+      bottom: 2rem;
+      right: 1rem;
+      z-index: 300;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 0.4rem 0.75rem;
+      color: var(--text-muted);
+      font-size: 0.8rem;
+      font-family: var(--font-mono);
+      cursor: pointer;
+    }
+
+    /* ── Scrollbar ─────────────────────────────────────────── */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+    /* ── Animations ────────────────────────────────────────── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(14px); }
+      to   { opacity: 1; transform: translateY(0);    }
+    }
+    article { animation: fadeUp 0.45s ease both; }
+
+    /* ── Responsive ────────────────────────────────────────── */
+    @media (max-width: 1100px) {
+      :root { --sidebar-w: 220px; }
+    }
+    @media (max-width: 820px) {
+      #sidebar { transform: translateX(100%); transition: transform 0.25s; }
+      #sidebar.open { transform: translateX(0); }
+      #main { margin-right: 0 !important; }
+      #sidebar-toggle { display: block; }
+    }
+
+    /* ── Pygments injected ─────────────────────────────────── */
+    pre { line-height: 125%; }
+td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+.codehilite .hll { background-color: #ffffcc }
+.codehilite { background: #282C34; color: #ABB2BF }
+.codehilite .c { color: #7F848E } /* Comment */
+.codehilite .err { color: #ABB2BF } /* Error */
+.codehilite .esc { color: #ABB2BF } /* Escape */
+.codehilite .g { color: #ABB2BF } /* Generic */
+.codehilite .k { color: #C678DD } /* Keyword */
+.codehilite .l { color: #ABB2BF } /* Literal */
+.codehilite .n { color: #E06C75 } /* Name */
+.codehilite .o { color: #56B6C2 } /* Operator */
+.codehilite .x { color: #ABB2BF } /* Other */
+.codehilite .p { color: #ABB2BF } /* Punctuation */
+.codehilite .ch { color: #7F848E } /* Comment.Hashbang */
+.codehilite .cm { color: #7F848E } /* Comment.Multiline */
+.codehilite .cp { color: #7F848E } /* Comment.Preproc */
+.codehilite .cpf { color: #7F848E } /* Comment.PreprocFile */
+.codehilite .c1 { color: #7F848E } /* Comment.Single */
+.codehilite .cs { color: #7F848E } /* Comment.Special */
+.codehilite .gd { color: #ABB2BF } /* Generic.Deleted */
+.codehilite .ge { color: #ABB2BF } /* Generic.Emph */
+.codehilite .ges { color: #ABB2BF } /* Generic.EmphStrong */
+.codehilite .gr { color: #ABB2BF } /* Generic.Error */
+.codehilite .gh { color: #ABB2BF } /* Generic.Heading */
+.codehilite .gi { color: #ABB2BF } /* Generic.Inserted */
+.codehilite .go { color: #ABB2BF } /* Generic.Output */
+.codehilite .gp { color: #ABB2BF } /* Generic.Prompt */
+.codehilite .gs { color: #ABB2BF } /* Generic.Strong */
+.codehilite .gu { color: #ABB2BF } /* Generic.Subheading */
+.codehilite .gt { color: #ABB2BF } /* Generic.Traceback */
+.codehilite .kc { color: #E5C07B } /* Keyword.Constant */
+.codehilite .kd { color: #C678DD } /* Keyword.Declaration */
+.codehilite .kn { color: #C678DD } /* Keyword.Namespace */
+.codehilite .kp { color: #C678DD } /* Keyword.Pseudo */
+.codehilite .kr { color: #C678DD } /* Keyword.Reserved */
+.codehilite .kt { color: #E5C07B } /* Keyword.Type */
+.codehilite .ld { color: #ABB2BF } /* Literal.Date */
+.codehilite .m { color: #D19A66 } /* Literal.Number */
+.codehilite .s { color: #98C379 } /* Literal.String */
+.codehilite .na { color: #E06C75 } /* Name.Attribute */
+.codehilite .nb { color: #E5C07B } /* Name.Builtin */
+.codehilite .nc { color: #E5C07B } /* Name.Class */
+.codehilite .no { color: #E06C75 } /* Name.Constant */
+.codehilite .nd { color: #61AFEF } /* Name.Decorator */
+.codehilite .ni { color: #E06C75 } /* Name.Entity */
+.codehilite .ne { color: #E06C75 } /* Name.Exception */
+.codehilite .nf { color: #61AFEF; font-weight: bold } /* Name.Function */
+.codehilite .nl { color: #E06C75 } /* Name.Label */
+.codehilite .nn { color: #E06C75 } /* Name.Namespace */
+.codehilite .nx { color: #E06C75 } /* Name.Other */
+.codehilite .py { color: #E06C75 } /* Name.Property */
+.codehilite .nt { color: #E06C75 } /* Name.Tag */
+.codehilite .nv { color: #E06C75 } /* Name.Variable */
+.codehilite .ow { color: #56B6C2 } /* Operator.Word */
+.codehilite .pm { color: #ABB2BF } /* Punctuation.Marker */
+.codehilite .w { color: #ABB2BF } /* Text.Whitespace */
+.codehilite .mb { color: #D19A66 } /* Literal.Number.Bin */
+.codehilite .mf { color: #D19A66 } /* Literal.Number.Float */
+.codehilite .mh { color: #D19A66 } /* Literal.Number.Hex */
+.codehilite .mi { color: #D19A66 } /* Literal.Number.Integer */
+.codehilite .mo { color: #D19A66 } /* Literal.Number.Oct */
+.codehilite .sa { color: #98C379 } /* Literal.String.Affix */
+.codehilite .sb { color: #98C379 } /* Literal.String.Backtick */
+.codehilite .sc { color: #98C379 } /* Literal.String.Char */
+.codehilite .dl { color: #98C379 } /* Literal.String.Delimiter */
+.codehilite .sd { color: #98C379 } /* Literal.String.Doc */
+.codehilite .s2 { color: #98C379 } /* Literal.String.Double */
+.codehilite .se { color: #98C379 } /* Literal.String.Escape */
+.codehilite .sh { color: #98C379 } /* Literal.String.Heredoc */
+.codehilite .si { color: #98C379 } /* Literal.String.Interpol */
+.codehilite .sx { color: #98C379 } /* Literal.String.Other */
+.codehilite .sr { color: #98C379 } /* Literal.String.Regex */
+.codehilite .s1 { color: #98C379 } /* Literal.String.Single */
+.codehilite .ss { color: #98C379 } /* Literal.String.Symbol */
+.codehilite .bp { color: #E5C07B } /* Name.Builtin.Pseudo */
+.codehilite .fm { color: #56B6C2; font-weight: bold } /* Name.Function.Magic */
+.codehilite .vc { color: #E06C75 } /* Name.Variable.Class */
+.codehilite .vg { color: #E06C75 } /* Name.Variable.Global */
+.codehilite .vi { color: #E06C75 } /* Name.Variable.Instance */
+.codehilite .vm { color: #E06C75 } /* Name.Variable.Magic */
+.codehilite .il { color: #D19A66 } /* Literal.Number.Integer.Long */
+
+
+  </style>
+</head>
+<body>
+
+<div id="progress"></div>
+
+<!-- Sidebar -->
+<nav id="sidebar" aria-label="Table of contents">
+  <div id="sidebar-title">Contents</div>
+  <ul id="toc"></ul>
+</nav>
+
+<button id="sidebar-toggle" aria-label="Toggle sidebar">☰ TOC</button>
+
+<!-- Main -->
+<div id="main">
+  <article>
+    <header id="doc-header">
+      <h1 id="doc-title">جامعة الصوت — المسرد الشامل</h1>
+      <div id="doc-meta"></div>
+    </header>
+
+    <h1 id="_1">جامعة الصوت — المسرد الشامل</h1>
+<p><em>مصطلحات هندسة الصوت مرتبطة بسلوك الـ Suno prompts وإنتاج الشعر العربي الكلاسيكي.</em></p>
+<p>هذه المصطلحات تصف <strong>ما تسمع</strong> — وليس ما تقيسه. عندما تستطيع تسمية المشكلة بدقة في توليدك، تعرف أي كلمة في الـ prompt يجب حذفها أو استبدالها. الترجمات العربية هي تسميات عملية، وليست تعريفات أكوستيكية رسمية.</p>
+<hr>
+<h2 id="1-the-room">1. مصطلحات الفضاء والريفيرب (The &ldquo;Room&rdquo; / الفضاء الصوتي)</h2>
+<p><em>تصف هذه المصطلحات حجم وانعكاسية وطابع الصدى للمساحة الخيالية التي يوجد فيها التسجيل.</em></p>
+<hr>
+<ul>
+<li><strong>Smeared / Washed Out (مشتت / غارق)</strong></li>
+<li><strong>ما تسمع:</strong> يبدو الصوت البشري بعيداً، كأنه يغني داخل كهف. تفقد الحروف العربية الحادة (ق، ط، ك) قوتها وتندمج في الكلمة التالية. يطفو الوزن الشعري عن الإيقاع.</li>
+<li>
+<p><strong>سبب في Suno:</strong> وسوم مثل <code>atmospheric</code>، <code>epic</code>، <code>cinematic</code>، <code>large hall</code>، أو <code>ethereal</code>. يضيف Suno ريڤيرب ثقيلاً، يدفع الصوت بعيداً عن المركز ويشتته عبر الحقل الصوتي.</p>
+</li>
+<li>
+<p><strong>Dry (جاف)</strong></p>
+</li>
+<li><strong>ما تسمع:</strong> لا صدى على الإطلاق. يبدو المغني وكأنه يقف على بعد ثلاثة إنشات من وجهك في غرفة مبطنة. تستطيع سماع النَفَس وحركة الشفاه قبل بدء الكلمة.</li>
+<li>
+<p><strong>سبب في Suno:</strong> وسوم مثل <code>close-mic</code>، <code>dry studio vocal</code>، <code>dead room</code>، أو <code>intimate</code>. عادةً ما تريده للشعر للحفاظ على نقاء الكلمات.</p>
+</li>
+<li>
+<p><strong>Reverb Tail (ذَيْل الصَّدى)</strong></p>
+</li>
+<li><strong>ما تسمع:</strong> الصدى الخافت الذي يستمر بعد توقف الصوت — &ldquo;الازدهار&rdquo; بعد إغلاق المغني لمقطع. في المساحات الكبيرة يكون هذا الذيل طويلاً ويتداخل مع الكلمة التالية. في الغرف الميتة يختفي فوراً.</li>
+<li>
+<p><strong>سبب في Suno:</strong> يظهر من أي نوع موسيقي مسجل في مساحات انعكاسية كبيرة (أوركسترالي، جوقة، ambient). كلما طال الذيل زاد ابتلاعه للحروف في نهاية الأبيات.</p>
+</li>
+<li>
+<p><strong>Room Tone / Ambience (نَبْرَة الغُرْفَة)</strong></p>
+</li>
+<li><strong>ما تسمع:</strong> &ldquo;النَفَس&rdquo; الخفيف للمساحة التسجيلية نفسها — الفرق بين تسجيل يبدو وكأنه حدث في مكان ما وبين تسجيل سريري. كاتدرائية حجرية لها نبَرة غرفة. استوديو مبطن ليس له شيء تقريباً.</li>
+<li>
+<p><strong>سبب في Suno:</strong> ذاكرة الأنواع تحمل نبَرة الغرفة افتراضياً. <code>Gregorian chant</code> يوحي بالحجر. <code>Raw singer-songwriter</code> يوحي بغرفة خشبية صغيرة. <code>Telephone vocal</code> يوحي بعدم وجود غرفة على الإطلاق.</p>
+</li>
+<li>
+<p><strong>Stereo Width (الاتساع الصوتي)</strong></p>
+</li>
+<li><strong>ما تسمع:</strong> مدى انتشار الآلات يميناً ويساراً في سماعاتك. الميكس الضيق يبدو مونو ومركزياً. الميكس الواسع يبدو وكأن الآلات تحيط بك. الاتساع الزائد قد يدفع الصوت إلى الجانب ويجعله منفصلاً عن الموسيقى.</li>
+<li><strong>سبب في Suno:</strong> أنواع الفرق الكبيرة (أوركسترالي، ambient، cinematic) تكون افتراضياً واسعة. الأنواع الحميمة (folk أكوستيك، sawt) تكون ضيقة ومركزية.</li>
+</ul>
+<hr>
+<h2 id="2-the-body">2. مصطلحات التردد والوزن (The &ldquo;Body&rdquo; / جَسَد الصَّوْت)</h2>
+<p><em>تصف هذه المصطلحات توزيع الطاقة عبر الترددات المنخفضة والمتوسطة والعالية — &ldquo;الوزن&rdquo; الجسدي للصوت.</em></p>
+<hr>
+<ul>
+<li><strong>Thin / Hollow (نَحِيف / خَافِت)</strong></li>
+<li><strong>ما تسمع:</strong> باريتون يبدو كمراهق، أو كأنه يغني عبر هاتف قديم. لا يوجد صدر أو ثقل في الصوت. العبارة العربية &ldquo;لَا صَدْرَ فِيهِ&rdquo; تصفه بدقة.</li>
+<li>
+<p><strong>سبب في Suno:</strong> نقص الطاقة في نطاق 100–250 هرتز (ترددات رنين الصدر). غالباً ما يحدث بسبب وسوم lo-fi، أو جماليات phonograph قديمة، أو أنواع سُجلت قبل وجود ميكروفونات تلتقط البيس.</p>
+</li>
+<li>
+<p><strong>Muddy (غَائِم / مُوحَل)</strong></p>
+</li>
+<li><strong>ما تسمع:</strong> رجرجة مزدحمة وصوفية. كأن بطانية سميكة ملقاة على السماعات. يندمج البيس غيتار والكيك درام والتسجيل الصوتي المنخفض في كتلة غير واضحة. تذوب الكلمات الشعرية في الضجيج.</li>
+<li>
+<p><strong>سبب في Suno:</strong> كثرة الآلات المزدحمة في نطاق 100–400 هرتز في وقت واحد. يحدث بسبب <code>heavy dark rock</code>، <code>dense psychedelic</code>، أو <code>wall of sound</code> بدون <code>sparse</code> كموازن.</p>
+</li>
+<li>
+<p><strong>Bright / Harsh (صَاخِب / حَادّ)</strong></p>
+</li>
+<li><strong>ما تسمع:</strong> ترددات عالية تؤلم عند رفع الصوت. الصنجات تقطع. تصبح الحروف س، ش، ت حادة بدلاً من أن تكون واضحة. في أسوأ حالاته يشبه إبرة في الأذن.</li>
+<li>
+<p><strong>سبب في Suno:</strong> Suno يعزز نطاق 4–8 كيلوهرتز ليبدو المقطع &ldquo;حديثاً&rdquo; ومثيراً. يحدث بسبب <code>hyper-pop</code>، <code>commercial pop</code>، <code>over-compressed</code>، أو <code>boosted highs</code>.</p>
+</li>
+<li>
+<p><strong>Sibilance (حِدَّة السِّين)</strong></p>
+</li>
+<li><strong>ما تسمع:</strong> جزء محدد من الحدة — الصفير والتركيز الزائد على الحروف س، ش، ز، ص. الفرق بين &ldquo;سين&rdquo; واضحة وبين واحدة تقطع الميكس.</li>
+<li>
+<p><strong>سبب في Suno:</strong> نفس الأنواع التي تسبب الحدة، لكنها أشد عندما يكون الصوت مضغوطاً زيادة. في الشعر العربي، البيت 3 من الدرس 02 يوضح ذلك مباشرة: <code>سِينُ الكَلَامِ وَشِينُهُ سَيْفاً</code>.</p>
+</li>
+<li>
+<p><strong>Warm (دَافِئ)</strong></p>
+</li>
+<li><strong>ما تسمع:</strong> النقيض الجميل للنحافة والحدة في آن واحد. للصوت رنين صدري بدون أن يكون موحلاً. تبدو الآلات مستديرة الحواف بدلاً من الحادة. هناك شعور بالقرب الجسدي والغنى بدون ثقل.</li>
+<li>
+<p><strong>سبب في Suno:</strong> أنواع سُجلت تاريخياً بميكروفونات أنبوبية، وتقريب الميكروفون، وقليل من تعزيز الطرف العالي. يحدث بسبب <code>vintage</code>، <code>warm analog</code>، <code>acoustic tarab</code>، <code>intimate</code>، أو <code>studio jazz</code>.</p>
+</li>
+<li>
+<p><strong>Bass-Heavy (ثَقِيل القَاع)</strong></p>
+</li>
+<li><strong>ما تسمع:</strong> الطرف السفلي يسيطر على كل شيء. يدفع الكيك والـ bass غيتار الهواء عبر السماعات، لكن الصوت يطفو فوق الرجرجة بدلاً من الجلوس على مسرح واضح. مشكلة مختلفة عن الموحل — هنا البيس قوي وواضح، لكنه مرتفع جداً.</li>
+<li><strong>سبب في Suno:</strong> أنواع يكون فيها العرض السفلي هو الهدف: <code>trap</code>، <code>drill</code>، <code>deep house</code>، <code>dark techno</code>. نادراً ما تكون خطراً في سياق الشعر العربي.</li>
+</ul>
+<hr>
+<h2 id="3-the-mix">3. مصطلحات الفصل والديناميكس (The &ldquo;Mix&rdquo; / وُضُوح المَزِيج)</h2>
+<p><em>تصف كيف تتميز الأصوات الفردية — وخاصة الصوت البشري — عن بعضها في الميكس.</em></p>
+<hr>
+<ul>
+<li><strong>Buried / Masked (مَغْمُور / مَحْجُوب)</strong></li>
+<li><strong>ما تسمع:</strong> تعرف أن المغني يغني لكنك تجهد لفهم الكلمات. جيتار أو سينث يعزف في نفس نطاق التردد فيسحب الصوت من المقدمة.</li>
+<li>
+<p><strong>سبب في Suno:</strong> تداخل ترددي — وضع Suno جداراً كثيفاً من الآلات أمام الصوت. يُصلح بـ <code>vocal-forward</code>، <code>sparse arrangement</code>، أو <code>[Instrumental Break]</code>.</p>
+</li>
+<li>
+<p><strong>Punchy / Transient (حَاضِر / قَاطِع)</strong></p>
+</li>
+<li><strong>ما تسمع:</strong> النقيض التام للمغمور. ضربات الدرام تنفجر بوضوح. تصل حروف المغني إلى الأذن بتأثير جسدي. كل مقطع يهبط كعصا على جلد. المصطلح العربي نَبْض يصف هذه الجودة.</li>
+<li>
+<p><strong>سبب في Suno:</strong> مدى ديناميكي جيد وتداخل ترددي قليل. يتحقق بـ <code>clean production</code>، <code>staccato</code>، <code>minimalist arrangement</code>، <code>sparse</code>، <code>dry vocal-forward</code>.</p>
+</li>
+<li>
+<p><strong>Ducking (التَّرَاجُع الآلِي)</strong></p>
+</li>
+<li><strong>ما تسمع:</strong> تهدأ الآلات تلقائياً عند بدء المغني وتعود عند توقفه. يكون الصوت دائماً مسموعاً لأن الميكس يتنفس حوله.</li>
+<li>
+<p><strong>سبب في Suno:</strong> يظهر طبيعياً من <code>call and response</code>، <code>sparse</code>، <code>vocal-forward</code>، وذاكرة أنواع <code>minimalist acoustic</code>.</p>
+</li>
+<li>
+<p><strong>Dynamic Range (المَدى الدِّينامِيكِي)</strong></p>
+</li>
+<li><strong>ما تسمع:</strong> المسافة بين أهدأ وأعلى لحظات المقطع. المدى العالي يعني أن الهادئ حقاً هادئ والعالي يضرب بقوة.</li>
+<li>
+<p><strong>سبب في Suno:</strong> الأنواع المضغوطة (pop حديث، EDM) تسحق المدى. الأنواع الأكوستيكية والكلاسيكية تحافظ عليه.</p>
+</li>
+<li>
+<p><strong>Compression (الضَّغْط الصَّوْتِي)</strong></p>
+</li>
+<li><strong>ما تسمع:</strong> تقليل تلقائي للذروات. يبقى الصوت المضغوط عند مستوى ثابت. مفيد للوضوح لكن الزيادة تجعله بلاستيكياً وميتاً.</li>
+<li><strong>سبب في Suno:</strong> أنواع pop حديثة تستخدم ضغطاً ثقيلاً. تجنبه بـ <code>raw</code>، <code>unplugged</code>، <code>acoustic</code>.</li>
+</ul>
+<hr>
+<h2 id="4-the-voice">4. مصطلحات طابع الصوت ومستواه (The &ldquo;Voice&rdquo; / صَوْت المُغَنِّي)</h2>
+<p><em>تصف شخصية الصوت البشري نفسه — نسيجه ووزنه وجودته الجسدية.</em></p>
+<hr>
+<ul>
+<li><strong>Breathy (مُتَنَفِّس)</strong></li>
+<li>
+<p><strong>ما تسمع:</strong> هواء مختلط مع النغمة. يبدو المغني وكأنه يتنهد في الميكروفون. في الشعر العربي عادة فشل — يبدو ضعيفاً.</p>
+</li>
+<li>
+<p><strong>Chesty / Resonant (صَدْرِي / رَنَّان)</strong></p>
+</li>
+<li>
+<p><strong>ما تسمع:</strong> النقيض الإيجابي لمشكلة الصدر. للصوت ثقل وحضور جسدي. في العربية: صَوْتٌ لَهُ صَدْرٌ.</p>
+</li>
+<li>
+<p><strong>Nasal (أَنْفِي)</strong></p>
+</li>
+<li>
+<p><strong>ما تسمع:</strong> الرنين في التجويف الأنفي أكثر من الصدر. يبدو المغني محتقناً قليلاً.</p>
+</li>
+<li>
+<p><strong>Silky / Smooth (نَاعِم / مَنْسَاب)</strong></p>
+</li>
+<li>
+<p><strong>ما تسمع:</strong> ينتقل الصوت بين المقاطع بدون حواف خشنة. في النثر العربي الكلاسيكي قد يمحو الحدود بين التفعيلات.</p>
+</li>
+<li>
+<p><strong>Airy / Heady (هَوَائِي / رَأْسِي)</strong></p>
+</li>
+<li>
+<p><strong>ما تسمع:</strong> السجل العلوي قريب من الفالسيتو. خفيف وطافٍ.</p>
+</li>
+<li>
+<p><strong>Melismatic (مُلَحَّن / طَرَبِي)</strong></p>
+</li>
+<li>
+<p><strong>ما تسمع:</strong> عدة نغمات على مقطع واحد — تقليد الطرب العربي. جميل عند السيطرة، مشوه للوزن عند عدمها.</p>
+</li>
+<li>
+<p><strong>Declamatory / Strict (إِنْشَادِي / صَارِم)</strong></p>
+</li>
+<li><strong>ما تسمع:</strong> كل مقطع يُلقى كضربة متساوية الوزن. يحافظ على العروض بشكل أفضل.</li>
+</ul>
+<hr>
+<h2 id="5-the-grid">5. مصطلحات الإيقاع والزمن (The &ldquo;Grid&rdquo; / الإِيقَاع وَالزَّمَن)</h2>
+<p><em>تصف علاقة الموسيقى بنبض الزمن.</em></p>
+<hr>
+<ul>
+<li><strong>Driving (دَافِع)</strong></li>
+<li>
+<p><strong>ما تسمع:</strong> زخم أمامي لا يرحم. يناسب الأوزان السريعة (خبب، رجز).</p>
+</li>
+<li>
+<p><strong>Laid-Back / Relaxed (مُتَرَاخٍ)</strong></p>
+</li>
+<li>
+<p><strong>ما تسمع:</strong> يجلس المغني والآلات قليلاً خلف النبض.</p>
+</li>
+<li>
+<p><strong>Tight (مُحْكَم)</strong></p>
+</li>
+<li>
+<p><strong>ما تسمع:</strong> كل شيء يهبط بدقة آلية. مثالي للخبب.</p>
+</li>
+<li>
+<p><strong>Groove / Pocket (النَّبْضَة / الجَيْب الإِيقَاعِي)</strong></p>
+</li>
+<li>
+<p><strong>ما تسمع:</strong> إحساس أن الموسيقى حية وتتنفس.</p>
+</li>
+<li>
+<p><strong>Syncopation (التَّنَاوُب الإِيقَاعِي)</strong></p>
+</li>
+<li>
+<p><strong>ما تسمع:</strong> التركيز على النبضات غير الرئيسية — غير متوافق مع العروض العربية.</p>
+</li>
+<li>
+<p><strong>Staccato (مُقَطَّع)</strong></p>
+</li>
+<li>
+<p><strong>ما تسمع:</strong> النغمات مقطوعة وقصيرة. يناسب الخبب.</p>
+</li>
+<li>
+<p><strong>Legato (مُتَّصِل / مُنْسَاب)</strong></p>
+</li>
+<li>
+<p><strong>ما تسمع:</strong> التدفق السلس بدون فواصل.</p>
+</li>
+<li>
+<p><strong>Rubato (حُرِّية الإِيقَاع)</strong></p>
+</li>
+<li>
+<p><strong>ما تسمع:</strong> حرية في الإيقاع والتمدد التعبيري.</p>
+</li>
+<li>
+<p><strong>Tempo Mismatch (تَضَارُب الإِيقَاع)</strong></p>
+</li>
+<li><strong>ما تسمع:</strong> سرعة الموسيقى غير متوافقة مع سرعة الوزن العربي.</li>
+</ul>
+<hr>
+<h2 id="6-the-color">6. مصطلحات اللون اللحني والمودال (The &ldquo;Color&rdquo; / اللَّوْن الصَّوْتِي)</h2>
+<p><em>تصف الطابع العاطفي واللحني للموسيقى.</em></p>
+<hr>
+<ul>
+<li><strong>Dark (دَاكِن)</strong></li>
+<li>
+<p><strong>ما تسمع:</strong> طابع ثقيل نازل، خاصة في مقامي صبا وكرد.</p>
+</li>
+<li>
+<p><strong>Haunting / Eerie (مُسَكَّن / وَحْشِي)</strong></p>
+</li>
+<li>
+<p><strong>ما تسمع:</strong> أنغام معلقة غير محلولة.</p>
+</li>
+<li>
+<p><strong>Exotic / Orientalist (شَرْقِي / مُثِير)</strong></p>
+</li>
+<li>
+<p><strong>ما تسمع:</strong> استخدام الثانية المعززة (مقام حجاز).</p>
+</li>
+<li>
+<p><strong>Modal (مَقَامِي)</strong></p>
+</li>
+<li>
+<p><strong>ما تسمع:</strong> مبني على مقام وليس نظاماً كبيراً/صغيراً غربياً.</p>
+</li>
+<li>
+<p><strong>Resolved / Consonant (مُتَنَاغِم)</strong></p>
+</li>
+<li>
+<p><strong>ما تسمع:</strong> ينتهي على النغمة الرئيسية بشعور الوصول.</p>
+</li>
+<li>
+<p><strong>Dissonant (نَشَاز)</strong></p>
+</li>
+<li>
+<p><strong>ما تسمع:</strong> تصادم النغمات يخلق توتراً.</p>
+</li>
+<li>
+<p><strong>Bright Tonal / Luminous (مُضِيء — لوني، لا ترددي)</strong></p>
+</li>
+<li><strong>ما تسمع:</strong> طابع تصاعدي بهيج (مقام راست).</li>
+</ul>
+<hr>
+<h2 id="7-the-architecture">7. مصطلحات الترتيب والبنية (The &ldquo;Architecture&rdquo; / البِنْيَة المُوسِيقِيَّة)</h2>
+<p><em>تصف طبقات الآلات وتغير الكثافة وعلاقة الصوت بالآلات.</em></p>
+<hr>
+<ul>
+<li><strong>Sparse (مُتَفَرِّق / خَفِيف)</strong></li>
+<li>
+<p><strong>ما تسمع:</strong> آلات قليلة ومساحات صامتة. أفضل وسيلة لحماية فصحى الكلمات.</p>
+</li>
+<li>
+<p><strong>Lush / Dense (مُكْتَنِز / كَثِيف)</strong></p>
+</li>
+<li>
+<p><strong>ما تسمع:</strong> آلات كثيرة تملأ كل النطاقات.</p>
+</li>
+<li>
+<p><strong>Call and Response / Lazma (اللَّزْمَة / الصَّدى والجَوَاب)</strong></p>
+</li>
+<li>
+<p><strong>ما تسمع:</strong> حوار بين الصوت والآلة.</p>
+</li>
+<li>
+<p><strong>Build-Up (تَصَاعُد)</strong></p>
+</li>
+<li>
+<p><strong>ما تسمع:</strong> زيادة تدريجية في الكثافة نحو الذروة.</p>
+</li>
+<li>
+<p><strong>Breakdown (تَفْكِيك / تَهْدِئَة)</strong></p>
+</li>
+<li>
+<p><strong>ما تسمع:</strong> تقليل مفاجئ للآلات.</p>
+</li>
+<li>
+<p><strong>Wall of Sound (جِدَار الصَّوْت)</strong></p>
+</li>
+<li>
+<p><strong>ما تسمع:</strong> ملء كل النطاقات في وقت واحد.</p>
+</li>
+<li>
+<p><strong>Monophonic / Solo (أُحَادِي / مُنْفَرِد)</strong></p>
+</li>
+<li><strong>ما تسمع:</strong> خط لحني واحد بدون هارموني.</li>
+</ul>
+<hr>
+<h2 id="_2">إطار التشخيص: كيف تسمي مشكلتك</h2>
+<p>عندما تسمع توليداً لا يعجبك، مر بالأسئلة السبعة التالية بالترتيب. أول إجابة تنطبق هي مشكلتك.</p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>السؤال</th>
+<th>إذا نعم، المشكلة في&hellip;</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>هل يبدو الصوت بعيداً أو مليئاً بالصدى أو ضائعاً في الفضاء؟</td>
+<td><strong>The Room</strong> (Spatial)</td>
+</tr>
+<tr>
+<td>2</td>
+<td>هل يبدو الصوت نحيفاً/خافتاً أو موحلاً/ثقيلاً أو حاداً مؤلماً؟</td>
+<td><strong>The Body</strong> (Frequency)</td>
+</tr>
+<tr>
+<td>3</td>
+<td>هل تسمع المغني لكن لا تفهم الكلمات؟</td>
+<td><strong>The Mix</strong> (Separation)</td>
+</tr>
+<tr>
+<td>4</td>
+<td>هل طابع الصوت خاطئ — متنفس جداً، أنفي، هوائي، أو غير صدري بما يكفي؟</td>
+<td><strong>The Voice</strong> (Timbre)</td>
+</tr>
+<tr>
+<td>5</td>
+<td>هل الإيقاع يصارع الوزن — يسرع أو يتباطأ أو خارج الشبكة؟</td>
+<td><strong>The Grid</strong> (Rhythm)</td>
+</tr>
+<tr>
+<td>6</td>
+<td>هل المزاج الموسيقي خاطئ — داكن جداً، مشرق جداً، غريب لحنياً؟</td>
+<td><strong>The Color</strong> (Tonal)</td>
+</tr>
+<tr>
+<td>7</td>
+<td>هل الآلات لا تتنحى للصوت، أو البنية خاطئة؟</td>
+<td><strong>The Architecture</strong> (Arrangement)</td>
+</tr>
+</tbody>
+</table>
+<p>بمجرد تسمية البُعد، تعرف أي قسم من هذا المسرد تستشير — وأي كلمات prompt يجب تغييرها.</p>
+  </article>
+</div>
+
+<a id="home-btn" href="../index.html" title="Go to homepage" aria-label="Homepage">🏡</a>
+<a id="back-top" href="#" title="Back to top" aria-label="Back to top">↑</a>
+
+<script>
+(function () {
+  // ── Reading progress ──────────────────────────────────────
+  const bar = document.getElementById('progress');
+  window.addEventListener('scroll', () => {
+    const h = document.documentElement;
+    const pct = (h.scrollTop / (h.scrollHeight - h.clientHeight)) * 100;
+    bar.style.width = pct + '%';
+  }, { passive: true });
+
+
+// ── Build TOC from headings ───────────────────────────────
+  const article = document.querySelector('article');
+  const toc     = document.getElementById('toc');
+  const headings = article.querySelectorAll('h1,h2,h3,h4');
+  let idx = 0;
+
+  headings.forEach(h => {
+    if (h.id === 'doc-title') return;
+    if (!h.id) { h.id = 'heading-' + (idx++); }
+    const li  = document.createElement('li');
+    const a   = document.createElement('a');
+    a.href    = '#' + h.id;
+    a.textContent = h.textContent;
+    a.className   = 'toc-' + h.tagName.toLowerCase();
+    
+    // Add native tooltip only if the text is truncated
+    a.addEventListener('mouseenter', function() {
+      if (this.scrollWidth > this.clientWidth) {
+        this.title = this.textContent;
+      } else {
+        this.removeAttribute('title');
+      }
+    });
+
+    li.appendChild(a);
+    toc.appendChild(li);
+  });
+
+  // ── Active TOC highlight on scroll ───────────────────────
+  const tocLinks = toc.querySelectorAll('a');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      const link = toc.querySelector('a[href="#' + e.target.id + '"]');
+      if (link) link.classList.toggle('active', e.isIntersecting);
+    });
+  }, { rootMargin: '-10% 0px -80% 0px' });
+  headings.forEach(h => { if (h.id !== 'doc-title') observer.observe(h); });
+
+  // ── Back-to-top visibility ────────────────────────────────
+  const btt = document.getElementById('back-top');
+  window.addEventListener('scroll', () => {
+    btt.classList.toggle('visible', window.scrollY > 300);
+  }, { passive: true });
+  btt.addEventListener('click', e => {
+    e.preventDefault();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+
+  // ── Sidebar toggle (mobile) ───────────────────────────────
+  document.getElementById('sidebar-toggle').addEventListener('click', () => {
+    document.getElementById('sidebar').classList.toggle('open');
+  });
+
+// ── Copy buttons on code blocks & prose blocks ────────────
+  document.querySelectorAll('.codehilite, pre:not(.codehilite pre)').forEach(block => {
+    const btn  = document.createElement('button');
+    btn.className   = 'copy-btn';
+    btn.textContent = 'Copy';
+    btn.setAttribute('aria-label', 'Copy text');
+    block.style.position = 'relative';
+    block.prepend(btn);
+    
+    btn.addEventListener('click', () => {
+      // Find the actual pre element (it might be the block itself, or inside it)
+      const pre = block.tagName === 'PRE' ? block : block.querySelector('pre');
+      if (!pre) return;
+      
+      // Clone the node so we can remove the button from the copied text
+      const clone = pre.cloneNode(true);
+      const btnInClone = clone.querySelector('.copy-btn');
+      if (btnInClone) btnInClone.remove();
+      
+      navigator.clipboard.writeText(clone.innerText).then(() => {
+        btn.textContent = '✓ Copied';
+        btn.classList.add('copied');
+        setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
+      });
+    });
+  });
+
+  
+  // ── Wrap tables for horizontal scroll ────────────────────
+  document.querySelectorAll('article table').forEach(t => {
+    const w = document.createElement('div');
+    w.className = 'table-wrap';
+    t.parentNode.insertBefore(w, t);
+    w.appendChild(t);
+  });
+
+  // ── Doc meta (word count + read time) ────────────────────
+  const words = article.innerText.trim().split(/\s+/).length;
+  const mins  = Math.max(1, Math.round(words / 200));
+  const meta  = document.getElementById('doc-meta');
+  if (meta) meta.textContent = words.toLocaleString() + ' words · ' + mins + ' min read';
+})();
+</script>
+
+</body>
+</html>

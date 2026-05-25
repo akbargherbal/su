@@ -9,6 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;1,9..144,300&family=JetBrains+Mono:wght@400;500&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet" />
 
   <style>
     /* ── Reset & base ──────────────────────────────────────── */
@@ -30,6 +31,7 @@
       --font-body:   'DM Sans', sans-serif;
       --font-head:   'Fraunces', Georgia, serif;
       --font-mono:   'JetBrains Mono', 'Fira Code', monospace;
+      --font-prose:  'Amiri', Georgia, serif;
 
       /* Layout */
       --content-max: 860px;
@@ -281,19 +283,43 @@
     }
 
     /* ── Plain fenced blocks / Prose blocks ───────────────── */
-        /* ── Plain fenced blocks (no lang tag) ────────────────────
-       Default monospace treatment when --prose is NOT active.
+        /* ── Prose blocks (--prose / --no-code mode) ──────────────
+       Replaces the default monospace pre card with a literary
+       typography treatment using Amiri for Arabic & Latin.
     ─────────────────────────────────────────────────────────── */
+
     pre:not(.codehilite pre) {
-      background: #111827;
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 1.5rem;
-      overflow-x: auto;
-      font-family: var(--font-mono);
-      font-size: 0.86rem;
-      line-height: 1.7;
-      margin: 1.75rem 0;
+      background:    var(--surface);          /* softer card  */
+      border:        1px solid var(--border);
+      border-left: 3px solid var(--accent); /* accent spine */
+      border-radius: 12px;
+      padding:       2rem 2.5rem;             /* reduced top padding since label is removed */
+      overflow-x:    visible;
+      white-space:   pre-wrap;
+      word-break:    break-word;
+
+      /* Literary typography */
+      font-family:  'Amiri', Georgia, serif;
+      font-size:    1.15rem;
+      line-height:  2.4;                      /* diacritics need air */
+      text-align:   left;
+      direction:    ltr;
+
+      margin: 2rem 0;
+      position: relative;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.25);
+    }
+
+    /* Ensure nested <code> inside prose pre is not re-styled by
+       the inline-code rule — colour and decoration inherit cleanly */
+    pre:not(.codehilite pre) code {
+      background:    none !important;
+      border:        none !important;
+      padding:       0    !important;
+      color:         inherit !important;
+      font-family:   inherit !important;
+      font-size:     inherit !important;
+      border-radius: 0    !important;
     }
 
     /* ── Blockquotes ───────────────────────────────────────── */
@@ -392,6 +418,28 @@
     }
     #back-top.visible { opacity: 1; transform: translateY(0); }
     #back-top:hover { color: var(--accent); border-color: var(--accent); }
+
+    /* ── Home button ────────────────────────────────────────── */
+    #home-btn {
+      position: fixed;
+      bottom: 5.5rem;
+      right: 2rem;
+      width: 40px;
+      height: 40px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 1.1rem;
+      opacity: 1;
+      transition: color 0.15s, border-color 0.15s;
+      z-index: 200;
+    }
+    #home-btn:hover { color: var(--accent); border-color: var(--accent); }
 
     /* ── Sidebar toggle (hidden on wide screens) ───────────── */
     #sidebar-toggle {
@@ -519,6 +567,8 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 .codehilite .vi { color: #E06C75 } /* Name.Variable.Instance */
 .codehilite .vm { color: #E06C75 } /* Name.Variable.Magic */
 .codehilite .il { color: #D19A66 } /* Literal.Number.Integer.Long */
+
+
   </style>
 </head>
 <body>
@@ -541,11 +591,11 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
       <div id="doc-meta"></div>
     </header>
 
-    <h1 id="sound-university-comprehensive-glossary">Sound University — Comprehensive Glossary<a class="headerlink" href="#sound-university-comprehensive-glossary" title="Permanent link">&para;</a></h1>
+    <h1 id="sound-university-comprehensive-glossary">Sound University — Comprehensive Glossary</h1>
 <p><em>Audio engineering vocabulary mapped to Suno prompt behavior and classical Arabic poetry production.</em></p>
 <p>These terms describe what you <strong>hear</strong> — not what you measure. When you can name the exact problem in your generation, you know which word in your prompt to delete or replace. The Arabic translations are working labels, not formal acoustic definitions.</p>
 <hr>
-<h2 id="1-spatial-reverb-terms-the-room">1. Spatial &amp; Reverb Terms (The &ldquo;Room&rdquo; / الفضاء الصوتي)<a class="headerlink" href="#1-spatial-reverb-terms-the-room" title="Permanent link">&para;</a></h2>
+<h2 id="1-spatial-reverb-terms-the-room">1. Spatial &amp; Reverb Terms (The &ldquo;Room&rdquo; / الفضاء الصوتي)</h2>
 <p><em>These terms describe the size, reflectivity, and echo character of the imaginary space the recording sits inside.</em></p>
 <hr>
 <ul>
@@ -582,7 +632,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <li><strong>Suno Cause:</strong> Large ensemble genres (orchestral, ambient, cinematic) default to wide stereo. Intimate genres (acoustic folk, sawt) default to narrow and centered.</li>
 </ul>
 <hr>
-<h2 id="2-frequency-weight-terms-the-body">2. Frequency &amp; Weight Terms (The &ldquo;Body&rdquo; / جَسَد الصَّوْت)<a class="headerlink" href="#2-frequency-weight-terms-the-body" title="Permanent link">&para;</a></h2>
+<h2 id="2-frequency-weight-terms-the-body">2. Frequency &amp; Weight Terms (The &ldquo;Body&rdquo; / جَسَد الصَّوْت)</h2>
 <p><em>These terms describe the distribution of energy across low, mid, and high frequencies — the physical &ldquo;weight&rdquo; of the sound.</em></p>
 <hr>
 <ul>
@@ -626,7 +676,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <li><strong>Suno Cause:</strong> Genres where low-end spectacle is the point: <code>trap</code>, <code>drill</code>, <code>deep house</code>, <code>dark techno</code>. Rarely a risk in Arabic poetry contexts unless sampling reference audio from these genres.</li>
 </ul>
 <hr>
-<h2 id="3-separation-dynamics-terms-the-mix">3. Separation &amp; Dynamics Terms (The &ldquo;Mix&rdquo; / وُضُوح المَزِيج)<a class="headerlink" href="#3-separation-dynamics-terms-the-mix" title="Permanent link">&para;</a></h2>
+<h2 id="3-separation-dynamics-terms-the-mix">3. Separation &amp; Dynamics Terms (The &ldquo;Mix&rdquo; / وُضُوح المَزِيج)</h2>
 <p><em>These terms describe how well individual sounds — particularly the vocal — stand apart from each other in the mix.</em></p>
 <hr>
 <ul>
@@ -663,7 +713,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <li><strong>Suno Cause:</strong> Modern pop genres use heavy compression by default. Triggered by <code>polished</code>, <code>radio-ready</code>, <code>commercial</code>, <code>over-produced</code>. Avoided by <code>raw</code>, <code>unplugged</code>, <code>live performance</code>, <code>acoustic</code>.</li>
 </ul>
 <hr>
-<h2 id="4-vocal-timbre-register-terms-the-voice">4. Vocal Timbre &amp; Register Terms (The &ldquo;Voice&rdquo; / صَوْت المُغَنِّي)<a class="headerlink" href="#4-vocal-timbre-register-terms-the-voice" title="Permanent link">&para;</a></h2>
+<h2 id="4-vocal-timbre-register-terms-the-voice">4. Vocal Timbre &amp; Register Terms (The &ldquo;Voice&rdquo; / صَوْت المُغَنِّي)</h2>
 <p><em>These terms describe the character of the human voice itself — its texture, weight, and physical quality — independent of the room or the instruments.</em></p>
 <hr>
 <ul>
@@ -714,7 +764,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <li><strong>Suno Cause:</strong> Triggered by <code>declamatory</code>, <code>strict syllabic enunciation</code>, <code>military march</code>, <code>spoken word</code>, <code>choral</code>, <code>Quranic recitation style</code>.</li>
 </ul>
 <hr>
-<h2 id="5-rhythm-time-terms-the-grid">5. Rhythm &amp; Time Terms (The &ldquo;Grid&rdquo; / الإِيقَاع وَالزَّمَن)<a class="headerlink" href="#5-rhythm-time-terms-the-grid" title="Permanent link">&para;</a></h2>
+<h2 id="5-rhythm-time-terms-the-grid">5. Rhythm &amp; Time Terms (The &ldquo;Grid&rdquo; / الإِيقَاع وَالزَّمَن)</h2>
 <p><em>These terms describe how the music relates to the pulse of time — whether it pushes forward, hangs back, or breaks the grid entirely.</em></p>
 <hr>
 <ul>
@@ -779,7 +829,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <li><strong>Suno Cause:</strong> Uploading a high-BPM Western audio reference, or using genre DNA (rock, punk, EDM) whose default tempo exceeds what the Arabic meter can sustain. Fixed by adding <code>mid-tempo</code>, <code>measured</code>, <code>deliberate</code> to the style field.</li>
 </ul>
 <hr>
-<h2 id="6-tonal-modal-color-terms-the-color">6. Tonal &amp; Modal Color Terms (The &ldquo;Color&rdquo; / اللَّوْن الصَّوْتِي)<a class="headerlink" href="#6-tonal-modal-color-terms-the-color" title="Permanent link">&para;</a></h2>
+<h2 id="6-tonal-modal-color-terms-the-color">6. Tonal &amp; Modal Color Terms (The &ldquo;Color&rdquo; / اللَّوْن الصَّوْتِي)</h2>
 <p><em>These terms describe the emotional and tonal character of the music — the feeling a scale, mode, or harmony creates before a single word is sung.</em></p>
 <hr>
 <ul>
@@ -830,7 +880,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <li><strong>Suno Cause:</strong> Triggered by <code>major key</code>, <code>triumphant</code>, <code>heroic</code>, <code>uplifting</code>. In Arabic context, arrives with <code>Maqam Rast</code>, <code>nasheed</code>, <code>celebratory</code>.</li>
 </ul>
 <hr>
-<h2 id="7-arrangement-structure-terms-the-architecture">7. Arrangement &amp; Structure Terms (The &ldquo;Architecture&rdquo; / البِنْيَة المُوسِيقِيَّة)<a class="headerlink" href="#7-arrangement-structure-terms-the-architecture" title="Permanent link">&para;</a></h2>
+<h2 id="7-arrangement-structure-terms-the-architecture">7. Arrangement &amp; Structure Terms (The &ldquo;Architecture&rdquo; / البِنْيَة المُوسِيقِيَّة)</h2>
 <p><em>These terms describe how instruments are layered, how density changes over time, and how the vocal and instruments relate to each other structurally.</em></p>
 <hr>
 <ul>
@@ -881,7 +931,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <li><strong>Suno Cause:</strong> Triggered by <code>solo vocal</code>, <code>a cappella</code>, <code>unaccompanied</code>, <code>solo oud</code>. Difficult to sustain for a full Suno track — usually emerges in intro or outro sections.</li>
 </ul>
 <hr>
-<h2 id="diagnostic-framework-how-to-name-your-problem">Diagnostic Framework: How to Name Your Problem<a class="headerlink" href="#diagnostic-framework-how-to-name-your-problem" title="Permanent link">&para;</a></h2>
+<h2 id="diagnostic-framework-how-to-name-your-problem">Diagnostic Framework: How to Name Your Problem</h2>
 <p>When you listen to a generation you do not like, work through these seven questions in order. The first answer that fits is your problem.</p>
 <table>
 <thead>
@@ -933,6 +983,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
   </article>
 </div>
 
+<a id="home-btn" href="../index.html" title="Go to homepage" aria-label="Homepage">🏡</a>
 <a id="back-top" href="#" title="Back to top" aria-label="Back to top">↑</a>
 
 <script>
@@ -945,7 +996,8 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
     bar.style.width = pct + '%';
   }, { passive: true });
 
-  // ── Build TOC from headings ───────────────────────────────
+
+// ── Build TOC from headings ───────────────────────────────
   const article = document.querySelector('article');
   const toc     = document.getElementById('toc');
   const headings = article.querySelectorAll('h1,h2,h3,h4');
@@ -959,6 +1011,16 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
     a.href    = '#' + h.id;
     a.textContent = h.textContent;
     a.className   = 'toc-' + h.tagName.toLowerCase();
+    
+    // Add native tooltip only if the text is truncated
+    a.addEventListener('mouseenter', function() {
+      if (this.scrollWidth > this.clientWidth) {
+        this.title = this.textContent;
+      } else {
+        this.removeAttribute('title');
+      }
+    });
+
     li.appendChild(a);
     toc.appendChild(li);
   });
