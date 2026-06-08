@@ -190,6 +190,12 @@ python scripts/html_manipulator.py HTML_MUSIC/ --move-audio -o HTML_MUSIC/out/
 
 # Remove elements by CSS selector
 python scripts/html_manipulator.py HTML_MUSIC/ --remove-tag "h1#_1"
+
+# Fix Suno prompt direction and strip SUNO_PROMPT markers
+python scripts/html_manipulator.py HTML_LESSONS/ --fix-suno-prompts
+
+# Combine operations in a single pass (what sync.toml runs)
+python scripts/html_manipulator.py HTML_LESSONS/ --move-audio --fix-suno-prompts
 ```
 
 **Operations:**
@@ -206,6 +212,17 @@ in a `.lyrics-card` container (audio on top, verse below). Injects card CSS idem
 `--remove-tag "SELECTOR"`
 Removes all elements matching a CSS selector. Repeatable flag.
 Common use: `"h1#_1"` removes the duplicate H1 `convert_md2html` injects.
+
+`--fix-suno-prompts`
+Finds all `<pre><code>` blocks containing the `SUNO_PROMPT` marker, forces LTR
+rendering on that block, and strips the marker line from the code content.
+
+- **Marker:** the literal string `SUNO_PROMPT` appearing as the first line of a fenced code block in the Markdown source — it is a build-time signal only and is never shown to readers
+- **`<code>`:** gets `dir="ltr"` so the text content renders left-to-right
+- **`<pre>`:** gets `direction: ltr; text-align: left;` appended as an inline style — necessary because the stylesheet rule `pre:not(.codehilite pre)` hard-codes `direction: rtl; text-align: right;`, which beats the HTML `dir` attribute; only inline style wins on specificity
+- Marker line (including its trailing newline) is removed from the code content via `re.sub`
+- Handles both single-text-node `<code>` blocks and syntax-highlighted (multi-child) blocks
+- Idempotent — safe to re-run; any existing `direction`/`text-align` in the inline style are stripped before re-appending
 
 **Lyrics card CSS** (injected once, idempotent via marker comment):
 ```css
@@ -243,6 +260,9 @@ python sync.py --list                   # print all available routines and their
 | `lessons` | convert lessons → post-process lessons | No |
 | `music` | convert music → post-process music | No |
 | `push` | git commit + push only | Yes |
+
+Post-process steps (`manipulate_lessons`, `manipulate_music`) run both
+`--move-audio` and `--fix-suno-prompts` in a single pass over each directory.
 
 **`sync.toml` structure:**
 
@@ -368,6 +388,7 @@ GitHub Pages redeploys automatically on push to `main`.
 | Perfect audio marker: `data-embed="lyrics"` | Differentiates the canonical song from secondary/illustrative audio tags |
 | `--move-audio` uses global search | Allows prose/headings between the audio tag and the lyrics block in Markdown |
 | CSS injection is idempotent | `_inject_css()` checks for a marker comment before injecting — safe to re-run |
+| `SUNO_PROMPT` marker in code blocks | First line of any fenced code block containing a Suno prompt — tells `--fix-suno-prompts` to force LTR rendering (`dir="ltr"` on `<code>`, inline `direction: ltr; text-align: left` on `<pre>`) and is stripped from the final HTML. Needed because `pre:not(.codehilite pre)` hard-codes `direction: rtl; text-align: right` in the stylesheet |
 | `LESSON_META` keyed by uppercase stem | e.g. `"LESSON_3A"` — must match `f.stem.upper()` from the scanned filename |
 | Lesson sort: numeric then alpha suffix | `LESSON_2A` < `LESSON_2B`; `LESSON_06` sorts as 6, not 60 |
 | Teaser prose threshold `> 100` chars | Automatically skips short headings/subtitles when extracting philosophy preview |
