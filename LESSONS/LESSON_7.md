@@ -101,6 +101,7 @@
 **المحث المطلوب في خانة (Style of Music):**
 
 ```text
+SUNO_PROMPT
 genre: "unaccompanied traditional inshad."
 vocal: "dry. centered. male baritone. declamatory."
 instrumentation: "silent. no instruments."
@@ -121,6 +122,7 @@ mood: "solemn. pure."
 **المحث المطلوب في خانة (Style of Music):**
 
 ```text
+SUNO_PROMPT
 genre: "cinematic chamber folk. neo-classical."
 vocal: "classical nasheed vocal style. authoritative declamatory male baritone. strict classical fusha pronunciation."
 instrumentation: "fingerstyle acoustic guitar. pizzicato strings. cello. minimal dry cajon."
@@ -130,6 +132,7 @@ mood: "noble. majestic. dramatic."
 
 **قائمة الاستبعادات (Exclusions):**
 ```text
+SUNO_PROMPT
 colloquial, dialect, english accent, westernized pronunciation, contemporary pop vocals, breathy singing, slurred consonants, whispering, oud, kanun, darbuka
 ```
 
@@ -144,6 +147,7 @@ colloquial, dialect, english accent, westernized pronunciation, contemporary pop
 **المحث المطلوب في خانة (Style of Music):**
 
 ```text
+SUNO_PROMPT
 genre: "epic cinematic chamber folk. majestic neo-classical."
 vocal: "classical nasheed vocal style. authoritative declamatory male baritone. strict classical fusha pronunciation."
 instrumentation: "rich arpeggiated acoustic guitar. sweeping cello. layered chamber strings. driving organic percussion."
@@ -153,6 +157,7 @@ mood: "noble. powerful. soaring."
 
 **قائمة الاستبعادات (Exclusions):**
 ```text
+SUNO_PROMPT
 colloquial, dialect, english accent, westernized pronunciation, contemporary pop vocals, breathy singing, slurred consonants, whispering, oud, kanun, darbuka, muddy, synth pads
 ```
 

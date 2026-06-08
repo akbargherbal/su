@@ -94,7 +94,7 @@
 **انسخ هذا المحث في خانة (Style of Music):**
 
 ```
-
+SUNO_PROMPT
 Lo-fi indie, old telephone vocal EQ, thin voice, acoustic guitar, missing low end
 
 ```
@@ -108,7 +108,7 @@ Lo-fi indie, old telephone vocal EQ, thin voice, acoustic guitar, missing low en
 **انسخ هذا المحث في خانة (Style of Music):**
 
 ```
-
+SUNO_PROMPT
 Heavy dark rock, cluttered instruments, thick dense bass, muddy mix, wooly vocal, loud kick drum
 
 ```
@@ -122,6 +122,7 @@ Heavy dark rock, cluttered instruments, thick dense bass, muddy mix, wooly vocal
 **انسخ هذا المحث في خانة (Style of Music):**
 
 ```
+SUNO_PROMPT
 Modern bright pop, boosted highs, sharp sibilant vocal, piercing cymbals
 ```
 

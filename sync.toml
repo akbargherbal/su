@@ -36,12 +36,12 @@ cmd   = "convert_md2html ./MUSIC -o ./HTML_MUSIC --lang ar --prose --home-url ..
 shell = "powershell"   # convert_md2html is a PowerShell profile function
 
 [steps.manipulate_lessons]
-label = "Post-process HTML_LESSONS (move-audio)"
-cmd   = "python scripts/html_manipulator.py HTML_LESSONS/ --move-audio"
+label = "Post-process HTML_LESSONS (move-audio + fix-suno-prompts)"
+cmd   = "python scripts/html_manipulator.py HTML_LESSONS/ --move-audio --fix-suno-prompts"
 
 [steps.manipulate_music]
-label = "Post-process HTML_MUSIC (move-audio)"
-cmd   = "python scripts/html_manipulator.py HTML_MUSIC/ --move-audio"
+label = "Post-process HTML_MUSIC (move-audio + fix-suno-prompts)"
+cmd   = "python scripts/html_manipulator.py HTML_MUSIC/ --move-audio --fix-suno-prompts"
 
 [steps.homepage]
 label = "Regenerate index.html"

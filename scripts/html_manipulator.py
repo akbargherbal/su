@@ -9,9 +9,11 @@ Usage:
   python scripts/html_manipulator.py HTML_MUSIC/ --move-audio
   python scripts/html_manipulator.py HTML_MUSIC/ --move-audio --dry-run
   python scripts/html_manipulator.py HTML_MUSIC/ --remove-tag "div.some-class"
+  python scripts/html_manipulator.py HTML_LESSONS/ --fix-suno-prompts
 """
 
 import argparse
+import re
 import sys
 from pathlib import Path
 
@@ -133,6 +135,58 @@ def op_remove_tag(soup, selector: str) -> int:
     return removed
 
 
+def op_fix_suno_prompts(soup) -> int:
+    """
+    Find all <pre><code> blocks that contain the SUNO_PROMPT marker,
+    set dir="ltr" on the <pre> element, and strip the marker line from
+    the code content.
+
+    Why this is needed:
+      Pages are generated with --lang ar, so all content inherits RTL
+      direction. Suno prompts are English and must render LTR. The
+      SUNO_PROMPT marker line is a build-time signal only — it is removed
+      from the final HTML so readers never see it.
+
+    Returns: number of blocks fixed.
+    """
+    from bs4 import NavigableString
+
+    count = 0
+    for pre in soup.find_all("pre"):
+        code = pre.find("code")
+        if not code:
+            continue
+        if "SUNO_PROMPT" not in code.get_text():
+            continue
+
+        # 1. Force left-to-right direction on the container.
+        #    Safe to set even if already present — idempotent.
+        pre["dir"] = "ltr"
+
+        # 2. Strip the marker line (and its trailing newline) from the
+        #    code content.  We handle two cases:
+        #
+        #    a) .string is not None  → the <code> has a single text node
+        #       (no syntax-highlight spans).  Direct replacement is safe.
+        #
+        #    b) .string is None      → multiple child nodes (e.g. the
+        #       converter added span elements for syntax colouring).
+        #       Walk NavigableString children and patch the one that
+        #       contains the marker.
+        if code.string is not None:
+            cleaned = re.sub(r"SUNO_PROMPT\n?", "", str(code.string), count=1)
+            code.string.replace_with(cleaned)
+        else:
+            for node in list(code.contents):
+                if isinstance(node, NavigableString) and "SUNO_PROMPT" in node:
+                    cleaned = re.sub(r"SUNO_PROMPT\n?", "", str(node), count=1)
+                    node.replace_with(cleaned)
+
+        count += 1
+
+    return count
+
+
 # ── CSS injection helper ─────────────────────────────────────────────────────
 
 def _inject_css(soup, marker: str, css: str) -> None:
@@ -199,6 +253,8 @@ Examples:
   python scripts/html_manipulator.py HTML_MUSIC/ --move-audio --dry-run
   python scripts/html_manipulator.py HTML_MUSIC/ --remove-tag "h1#_1"
   python scripts/html_manipulator.py HTML_MUSIC/ --move-audio -o HTML_MUSIC/out/
+  python scripts/html_manipulator.py HTML_LESSONS/ --fix-suno-prompts
+  python scripts/html_manipulator.py HTML_LESSONS/ --move-audio --fix-suno-prompts
 """,
     )
     p.add_argument("files", nargs="+", help="HTML file(s) or directory paths to process")
@@ -206,6 +262,14 @@ Examples:
         "--move-audio",
         action="store_true",
         help='Move <audio data-embed="lyrics"> into an adjacent lyrics card',
+    )
+    p.add_argument(
+        "--fix-suno-prompts",
+        action="store_true",
+        help=(
+            "Find <pre><code> blocks containing the SUNO_PROMPT marker, "
+            "set dir=ltr on the <pre>, and remove the marker line from the code"
+        ),
     )
     p.add_argument(
         "--remove-tag",
@@ -236,12 +300,14 @@ def main() -> None:
     ops: list = []
     if args.move_audio:
         ops.append((op_move_audio, {}))
+    if args.fix_suno_prompts:
+        ops.append((op_fix_suno_prompts, {}))
     for selector in args.remove_tag:
         ops.append((op_remove_tag, {"selector": selector}))
 
     if not ops:
         parser.error(
-            "No operations specified. Add --move-audio, --remove-tag SELECTOR, etc."
+            "No operations specified. Add --move-audio, --fix-suno-prompts, --remove-tag SELECTOR, etc."
         )
 
     output_dir = Path(args.output_dir) if args.output_dir else None
