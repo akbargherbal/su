@@ -19,6 +19,7 @@ from pathlib import Path
 
 # ── Dependency guard ─────────────────────────────────────────────────────────
 
+
 def _check_deps() -> None:
     try:
         from bs4 import BeautifulSoup  # noqa: F401
@@ -27,6 +28,7 @@ def _check_deps() -> None:
             "Missing dependency: pip install beautifulsoup4\n"
             "Install with: pip install beautifulsoup4"
         )
+
 
 # ── CSS injected when a lyrics-card is created ───────────────────────────────
 
@@ -53,9 +55,12 @@ _LYRICS_CARD_CSS = """
     }
 """
 
-_LYRICS_CARD_CSS_MARKER = "/* ── Lyrics card (audio + verse block) ──────────────────── */"
+_LYRICS_CARD_CSS_MARKER = (
+    "/* ── Lyrics card (audio + verse block) ──────────────────── */"
+)
 
 # ── Operations ───────────────────────────────────────────────────────────────
+
 
 def op_move_audio(soup) -> int:
     """
@@ -80,13 +85,17 @@ def op_move_audio(soup) -> int:
             break
 
     if not lyrics_pre:
-        print("    [move-audio] Skipping: No lyrics block starting with '///***///' found in this file.")
+        print(
+            "    [move-audio] Skipping: No lyrics block starting with '///***///' found in this file."
+        )
         return 0
 
     # 2. Find the perfect audio marked for embedding
     perfect_audio = soup.find("audio", attrs={"data-embed": "lyrics"})
     if not perfect_audio:
-        print("    [move-audio] Skipping: No <audio data-embed=\"lyrics\"> tag found in this file.")
+        print(
+            '    [move-audio] Skipping: No <audio data-embed="lyrics"> tag found in this file.'
+        )
         return 0
 
     # 3. Safely extract audio and decompose its empty parent wrapper if it is a <p>
@@ -138,14 +147,25 @@ def op_remove_tag(soup, selector: str) -> int:
 def op_fix_suno_prompts(soup) -> int:
     """
     Find all <pre><code> blocks that contain the SUNO_PROMPT marker,
-    set dir="ltr" on the <pre> element, and strip the marker line from
-    the code content.
+    fix their direction/alignment for LTR rendering, and strip the
+    marker line from the code content.
 
-    Why this is needed:
-      Pages are generated with --lang ar, so all content inherits RTL
-      direction. Suno prompts are English and must render LTR. The
-      SUNO_PROMPT marker line is a build-time signal only — it is removed
-      from the final HTML so readers never see it.
+    Why two elements need touching:
+
+      <code dir="ltr">
+        The dir attribute goes on <code> so the text content itself
+        renders left-to-right.
+
+      <pre style="direction: ltr; text-align: left;">
+        convert_md2html's stylesheet has a rule:
+            pre:not(.codehilite pre) { direction: rtl; text-align: right; }
+        Stylesheet rules beat the dir attribute, so we must override
+        both properties with an inline style on <pre> (inline style
+        wins on specificity).  The override is appended to whatever
+        inline style is already present (e.g. "position: relative;")
+        so nothing is clobbered.  The operation is idempotent — if the
+        properties are already in the inline style they are removed
+        first before being re-added.
 
     Returns: number of blocks fixed.
     """
@@ -159,20 +179,35 @@ def op_fix_suno_prompts(soup) -> int:
         if "SUNO_PROMPT" not in code.get_text():
             continue
 
-        # 1. Force left-to-right direction on the container.
-        #    Safe to set even if already present — idempotent.
-        pre["dir"] = "ltr"
+        # 1. Set dir="ltr" on the <code> element.
+        code["dir"] = "ltr"
 
-        # 2. Strip the marker line (and its trailing newline) from the
-        #    code content.  We handle two cases:
+        # 2. Override direction + text-align on the <pre> via inline style.
+        #    We must do this because the stylesheet rule:
+        #        pre:not(.codehilite pre) { direction: rtl; text-align: right; }
+        #    has higher specificity than the HTML dir attribute.
+        existing = pre.get("style", "")
+        # Strip any pre-existing direction / text-align declarations (idempotent).
+        stripped = re.sub(
+            r"\b(?:direction|text-align)\s*:[^;]+;?\s*", "", existing
+        ).strip()
+        base = stripped.rstrip(";").strip()
+        sep = "; " if base else ""
+        pre["style"] = (
+            base
+            + sep
+            + "direction: ltr; text-align: left; line-height: 1.5; font-family:monospace;"
+        )
+
+        # 3. Strip the SUNO_PROMPT marker line (+ its trailing newline) from
+        #    the code content.  Two cases:
         #
-        #    a) .string is not None  → the <code> has a single text node
-        #       (no syntax-highlight spans).  Direct replacement is safe.
+        #    a) code.string is not None → single text node (plain code block,
+        #       no syntax-highlight spans).  Replace directly.
         #
-        #    b) .string is None      → multiple child nodes (e.g. the
-        #       converter added span elements for syntax colouring).
-        #       Walk NavigableString children and patch the one that
-        #       contains the marker.
+        #    b) code.string is None → multiple child nodes (syntax-highlighted
+        #       spans).  Walk NavigableString children and patch the one that
+        #       carries the marker.
         if code.string is not None:
             cleaned = re.sub(r"SUNO_PROMPT\n?", "", str(code.string), count=1)
             code.string.replace_with(cleaned)
@@ -189,6 +224,7 @@ def op_fix_suno_prompts(soup) -> int:
 
 # ── CSS injection helper ─────────────────────────────────────────────────────
 
+
 def _inject_css(soup, marker: str, css: str) -> None:
     """Append css into the first <style> tag, once (idempotent via marker)."""
     style_tag = soup.find("style")
@@ -201,6 +237,7 @@ def _inject_css(soup, marker: str, css: str) -> None:
 
 
 # ── File-level processing ────────────────────────────────────────────────────
+
 
 def process_file(
     path: Path,
@@ -230,7 +267,9 @@ def process_file(
         return False
 
     if dry_run:
-        print(f"    [dry-run] would write → {path if output_dir is None else output_dir / path.name}")
+        print(
+            f"    [dry-run] would write → {path if output_dir is None else output_dir / path.name}"
+        )
         return True
 
     dest = (output_dir / path.name) if output_dir else path
@@ -240,6 +279,7 @@ def process_file(
 
 
 # ── CLI ──────────────────────────────────────────────────────────────────────
+
 
 def build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(
@@ -257,7 +297,9 @@ Examples:
   python scripts/html_manipulator.py HTML_LESSONS/ --move-audio --fix-suno-prompts
 """,
     )
-    p.add_argument("files", nargs="+", help="HTML file(s) or directory paths to process")
+    p.add_argument(
+        "files", nargs="+", help="HTML file(s) or directory paths to process"
+    )
     p.add_argument(
         "--move-audio",
         action="store_true",
@@ -279,7 +321,8 @@ Examples:
         help="Remove all elements matching CSS selector (repeatable)",
     )
     p.add_argument(
-        "-o", "--output-dir",
+        "-o",
+        "--output-dir",
         metavar="DIR",
         help="Write to DIR instead of modifying files in place",
     )
@@ -321,7 +364,7 @@ def main() -> None:
         if not path.exists():
             print(f"  ERROR: path '{arg}' does not exist — skipping")
             continue
-        
+
         if path.is_dir():
             # Find all HTML files inside this folder (sorted alphabetically)
             html_files = sorted(path.glob("*.html"))
