@@ -140,7 +140,7 @@ colloquial, dialect, english accent, contemporary pop vocals, breathy singing, s
 ```
 
 <audio controls style="width:100%; margin:0;">
-  <source src="../audio/lessons/L7Cinematic_Neo-Tarab.mp3" type="audio/mpeg">
+  <source src="../audio/lessons/L7/Cinematic_Neo-Tarab.mp3" type="audio/mpeg">
 </audio>
 
 **ماذا ستلاحظ؟**  
