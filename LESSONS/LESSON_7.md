@@ -106,6 +106,7 @@
 **المحث المطلوب في خانة (Style of Music):**
 
 ```text
+SUNO_PROMPT
 genre: "unaccompanied traditional inshad."
 vocal: "dry. centered. male baritone. declamatory."
 instrumentation: "silent. no instruments."
@@ -114,7 +115,11 @@ mood: "solemn. pure."
 ```
 
 **قائمة الاستبعادات (Exclusions):**
-`reverb, echo, delay, music, instruments, synthesizer, stereo width`
+
+```text
+SUNO_PROMPT
+reverb, echo, delay, music, instruments, synthesizer, stereo width
+```
 
 **ماذا ستلاحظ؟**  
 سيكشف هذا المحث عيوب الأداء والوزن بجراحية تامة. الصوت جاف تماماً، يقف في المنتصف بلا رنين أو صدى يتسبب في تشتيت الحروف. المقطع الأول (`صَوْتاً أُحَادِيّاً بَدَا مُنْفَرِدَا`) يجسد الواقع الفعلي للتجربة.
@@ -126,6 +131,7 @@ mood: "solemn. pure."
 **المحث المطلوب في خانة (Style of Music):**
 
 ```text
+SUNO_PROMPT
 genre: "cinematic neo-tarab. modern arabic orchestral."
 vocal: "classical nasheed vocal style. authoritative declamatory male baritone. strict classical fusha pronunciation."
 instrumentation: "staccato oud. solo violin. wide stereo strings. minimal crisp frame drum."
@@ -136,6 +142,7 @@ mood: "noble. majestic. dramatic."
 **قائمة الاستبعادات (Exclusions):**
 
 ```text
+SUNO_PROMPT
 colloquial, dialect, english accent, contemporary pop vocals, breathy singing, slurred consonants, whispering, muddy, heavy synth pads, reverb wash
 ```
 
@@ -157,6 +164,7 @@ colloquial, dialect, english accent, contemporary pop vocals, breathy singing, s
 **المحث المطلوب في خانة (Style of Music):**
 
 ```text
+SUNO_PROMPT
 genre: "epic cinematic chamber folk. majestic neo-classical."
 vocal: "classical nasheed vocal style. authoritative declamatory male baritone. strict classical fusha pronunciation."
 instrumentation: "rich arpeggiated acoustic guitar. sweeping cello. layered chamber strings. driving organic percussion."
@@ -167,6 +175,7 @@ mood: "noble. powerful. soaring."
 **قائمة الاستبعادات (Exclusions):**
 
 ```text
+SUNO_PROMPT
 colloquial, dialect, english accent, westernized pronunciation, contemporary pop vocals, breathy singing, slurred consonants, whispering, oud, kanun, darbuka, muddy, synth pads
 ```
 
