@@ -42,7 +42,7 @@
 ## البرومت المستخدم في سونو
 
 ```text
-<!-- SUNO_STYLE -->
+SUNO_PROMPT
 genre: "heavy doom metal and dense psychedelic rock, "
 vocal: "buried classical Arabic chanting, "
 instrumentation: "fuzz bass and overwhelming low end, "
