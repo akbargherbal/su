@@ -38,6 +38,10 @@
 
 ### ✍️ نص الأغنية (قصيدة: هَنْدَسَةُ الصَّوْتِ)
 
+<audio controls data-embed="lyrics" style="width:100%; margin:0;">
+  <source src="../audio/lessons/L7/Sparse_Monophonic_Experiment.mp3" type="audio/mpeg">
+</audio>
+
 ```
 ///***///
 

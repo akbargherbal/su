@@ -568,7 +568,28 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 .codehilite .il { color: #D19A66 } /* Literal.Number.Integer.Long */
 
 
-  </style>
+  
+    /* ── Lyrics card (audio + verse block) ──────────────────── */
+    .lyrics-card {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+      margin: 2rem 0;
+    }
+    .lyrics-card audio {
+      display: block;
+      width: 100%;
+      background: var(--surface2);
+      padding: 0.75rem 1rem;
+      margin: 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .lyrics-card pre {
+      margin: 0 !important;
+      border-radius: 0 !important;
+      border-top: none;
+    }
+</style>
 </head>
 <body>
 <div id="progress"></div>
@@ -644,7 +665,10 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 </table>
 <hr/>
 <h3 id="_4">✍️ نص الأغنية (قصيدة: هَنْدَسَةُ الصَّوْتِ)</h3>
-<pre><code>///***///
+
+<div class="lyrics-card"><audio controls="" data-embed="lyrics" style="width:100%; margin:0;"><br/>
+<source src="../audio/lessons/L7/Sparse_Monophonic_Experiment.mp3" type="audio/mpeg"/><br/>
+</audio><pre><code>///***///
 
 [Spoken Intro]
 فِي هَنْدَسَاتِ الصَّوْتِ فَنٌّ يُحْتَكَمْ
@@ -691,7 +715,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 تَبَدُّلٌ مَحْسُوبُ نَبْضٍ يَنْسَلِكْ
 كَأَنَّهَا طَاقَاتُنَا مُسْتَهْلَكَةْ
 يَخْشَى الرَّنِينُ صَدْرَنَا أَنْ يَرْتَبِكْ
-</code></pre>
+</code></pre></div>
 <hr/>
 <h3 id="suno">🎵 التطبيق العملي — التجربة عبر سونو (Suno)</h3>
 <p>انسخ نص الأغنية المحدّث أعلاه وضعه في <strong>خانة الكلمات (Lyrics)</strong> في سونو، ثم جرّب التوليد <strong>بثلاثة محثات (Prompts)</strong> لدراسة البُنى التوزيعية والتحكم في حيّز الفصحى ومخارج الحروف هندسياً.</p>
