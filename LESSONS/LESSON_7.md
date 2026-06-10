@@ -161,6 +161,10 @@ SUNO_PROMPT
 colloquial, dialect, english accent, westernized pronunciation, contemporary pop vocals, breathy singing, slurred consonants, whispering, oud, kanun, darbuka, muddy, synth pads
 ```
 
+<audio controls style="width:100%; margin:0;">
+  <source src="../audio/lessons/L7/The_Nasheed_Phonetic_Anchor.mp3" type="audio/mpeg">
+</audio>
+
 **ماذا ستلاحظ؟**  
 بدلًا من استخدام صفات ساكنة وباردة مثل (`minimal` أو `fingerstyle`) والتي تجعل الموسيقى باهتة للغاية، قمنا هنا بتفعيل **مفتاح الكثافة الديناميكية (Dynamic Scaling)** باستخدام **صفات نشطة (Active Descriptors)** مثل:
 *   `rich arpeggiated` لملء الفراغات بهارمونيات جيتار ممتدة.
