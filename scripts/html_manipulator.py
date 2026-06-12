@@ -123,19 +123,19 @@ CSS_OVERRIDES = [
     {
         "selector": 'pre[data-suno-prompt="true"] button',
         "css": """
-            position: absolute;
-            top: 0.5rem;
-            right: 0.75rem;
-            background: var(--surface2);
-            border: 1px solid var(--border);
-            color: var(--text-muted);
-            font-family: var(--font-mono);
-            font-size: 0.72rem;
-            padding: 0.25rem 0.65rem;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: background 0.15s, color 0.15s;
-            z-index: 2;
+    position: absolute;
+    top: 0.5rem;
+    right: 0.75rem;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    padding: 0.25rem 0.65rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+    z-index: 2;
         """,
     },
     # {
