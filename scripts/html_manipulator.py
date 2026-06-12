@@ -81,6 +81,8 @@ _LYRICS_CARD_CSS_MARKER = (
 # conflict (direction, text-align). line-height/font-family don't need it,
 # since nothing else at this specificity sets them.
 
+# ── CSS injected for Suno-prompt blocks (--fix-suno-prompts) ────────────────
+
 _SUNO_PROMPT_CSS = """
     /* ── Suno prompt LTR override ──────────────────── */
     pre[data-suno-prompt] {
@@ -88,6 +90,7 @@ _SUNO_PROMPT_CSS = """
       text-align: left !important;
       line-height: 1.5;
       font-family: var(--font-mono);
+      position: relative; /* Ensures the copy button aligns relative to this block */
     }
 """
 
