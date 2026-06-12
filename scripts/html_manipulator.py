@@ -10,6 +10,8 @@ Usage:
   python scripts/html_manipulator.py HTML_MUSIC/ --move-audio --dry-run
   python scripts/html_manipulator.py HTML_MUSIC/ --remove-tag "div.some-class"
   python scripts/html_manipulator.py HTML_LESSONS/ --fix-suno-prompts
+  python scripts/html_manipulator.py HTML_LESSONS/ --css-selector "blockquote" --remove-prop "font-style"
+  python scripts/html_manipulator.py HTML_LESSONS/ --css-selector "blockquote" --set-prop "font-weight:600"
 """
 
 import argparse
@@ -20,7 +22,7 @@ from pathlib import Path
 # ── Dependency guard ─────────────────────────────────────────────────────────
 
 
-def _check_deps() -> None:
+def _check_deps(need_cssutils: bool = False) -> None:
     try:
         from bs4 import BeautifulSoup  # noqa: F401
     except ImportError:
@@ -28,6 +30,16 @@ def _check_deps() -> None:
             "Missing dependency: pip install beautifulsoup4\n"
             "Install with: pip install beautifulsoup4"
         )
+
+    if need_cssutils:
+        try:
+            import cssutils  # noqa: F401
+        except ImportError:
+            sys.exit(
+                "Missing dependency: pip install cssutils\n"
+                "Required for --css-selector / --remove-prop / --set-prop.\n"
+                "Install with: pip install cssutils"
+            )
 
 
 # ── CSS injected when a lyrics-card is created ───────────────────────────────
@@ -58,6 +70,41 @@ _LYRICS_CARD_CSS = """
 _LYRICS_CARD_CSS_MARKER = (
     "/* ── Lyrics card (audio + verse block) ──────────────────── */"
 )
+
+# ── CSS overrides ─────────────────────────────────────────────────────────
+#
+# Each entry overrides a single CSS rule emitted by convert_md2html.
+# Workflow: open the page, find the rule in DevTools, toggle/edit
+# properties until it looks right, then copy the *entire resulting
+# declaration block* (everything between { and }) into `css` below.
+#
+# `op_modify_css_rule` replaces the whole declaration block for `selector`
+# with `css` — properties not listed here are dropped, not just left alone.
+# If `selector` isn't found in the stylesheet, the entry is skipped with
+# a warning (so a typo here won't silently do nothing forever).
+#
+# Add as many entries as you like; --apply-css-overrides applies all of
+# them, in order, to every <style> tag in each file.
+
+CSS_OVERRIDES = [
+    {
+        "selector": "blockquote",
+        "css": """
+            border-right: 3px solid var(--accent);
+            margin: 1.5rem 0;
+            padding: 1rem 1.5rem;
+            background: var(--surface2);
+            border-radius: 0 8px 8px 0;
+            color: var(--text-muted);
+        """,
+    },
+    # {
+    #     "selector": "blockquote p",
+    #     "css": """
+    #         margin: 0;
+    #     """,
+    # },
+]
 
 # ── Operations ───────────────────────────────────────────────────────────────
 
@@ -222,6 +269,114 @@ def op_fix_suno_prompts(soup) -> int:
     return count
 
 
+def op_modify_css_rule(
+    soup,
+    selector: str,
+    remove: "list[str] | None" = None,
+    set: "dict[str, str] | None" = None,
+    replace_with: "str | None" = None,
+) -> int:
+    """
+    Find a CSS rule by selector inside the <style> tag(s) and modify it
+    in place — either surgically (remove/set individual properties) or
+    wholesale (replace the entire declaration block with `replace_with`).
+
+    This edits convert_md2html's generated stylesheet directly via a real
+    CSSOM (cssutils), rather than appending override rules or touching
+    individual elements with inline styles.
+
+    `replace_with` mode (used by --apply-css-overrides / CSS_OVERRIDES):
+        The entire `rule.style` is replaced with the given declaration
+        block — properties not present in `replace_with` are dropped,
+        not merely left alone. This matches a "copy the final state from
+        DevTools" workflow: edit the rule until it looks right, copy
+        everything between `{` and `}`, paste it as `replace_with`.
+
+    `remove` / `set` mode (surgical, used by --css-selector etc.):
+        Only the listed properties are touched; everything else in the
+        rule is left as-is.
+
+    `replace_with` takes precedence if both are given.
+
+    Searches every <style> tag in the document and applies the change to
+    every matching rule found (in case convert_md2html ever emits more
+    than one <style> block or repeats a selector). If `selector` is not
+    found in any <style> tag, prints a warning and returns 0 — this is
+    intentional so a typo in a config entry doesn't silently no-op.
+
+    Idempotent: re-running with the same `replace_with`/`set`/`remove`
+    produces an equivalent rule, though the stylesheet is re-serialized
+    each time (whitespace/formatting may shift).
+
+    Returns: number of rules changed (0 or more, depending on how many
+    <style> tags contain a matching selector).
+    """
+    import cssutils
+    import logging
+
+    cssutils.log.setLevel(logging.CRITICAL)  # silence cssutils warnings
+
+    changed = 0
+    found_anywhere = False
+
+    for style_tag in soup.find_all("style"):
+        css_text = style_tag.string or ""
+        if not css_text.strip():
+            continue
+
+        sheet = cssutils.parseString(css_text)
+        found_in_sheet = False
+
+        for rule in sheet:
+            if rule.type != rule.STYLE_RULE:
+                continue
+            if rule.selectorText != selector:
+                continue
+
+            found_in_sheet = True
+            found_anywhere = True
+
+            if replace_with is not None:
+                rule.style.cssText = replace_with
+                changed += 1
+                continue
+
+            for prop in remove or []:
+                if rule.style.getProperty(prop):
+                    rule.style.removeProperty(prop)
+
+            for prop, value in (set or {}).items():
+                rule.style.setProperty(prop, value)
+
+            changed += 1
+
+        if found_in_sheet:
+            style_tag.string = sheet.cssText.decode("utf-8")
+
+    if not found_anywhere:
+        print(
+            f"    [modify-css-rule] WARNING: selector '{selector}' not found in any <style> tag"
+        )
+
+    return changed
+
+
+def op_apply_css_overrides(soup, overrides: "list[dict]") -> int:
+    """
+    Apply each entry in `overrides` (a list of {"selector", "css"} dicts,
+    see CSS_OVERRIDES at the top of this file) via op_modify_css_rule's
+    whole-block `replace_with` mode.
+
+    Returns: total number of rules changed across all overrides.
+    """
+    total = 0
+    for entry in overrides:
+        total += op_modify_css_rule(
+            soup, selector=entry["selector"], replace_with=entry["css"]
+        )
+    return total
+
+
 # ── CSS injection helper ─────────────────────────────────────────────────────
 
 
@@ -295,6 +450,19 @@ Examples:
   python scripts/html_manipulator.py HTML_MUSIC/ --move-audio -o HTML_MUSIC/out/
   python scripts/html_manipulator.py HTML_LESSONS/ --fix-suno-prompts
   python scripts/html_manipulator.py HTML_LESSONS/ --move-audio --fix-suno-prompts
+
+  # Apply all configured CSS_OVERRIDES (edit the list at the top of this script)
+  python scripts/html_manipulator.py HTML_LESSONS/ --apply-css-overrides
+
+  # Remove a CSS property from a rule (e.g. de-italicize blockquotes)
+  python scripts/html_manipulator.py HTML_LESSONS/ --css-selector "blockquote" --remove-prop "font-style"
+
+  # Set/override a CSS property on a rule
+  python scripts/html_manipulator.py HTML_LESSONS/ --css-selector "blockquote" --set-prop "font-weight:600"
+
+  # Both at once, on the same selector
+  python scripts/html_manipulator.py HTML_LESSONS/ --css-selector "blockquote" \\
+      --remove-prop "font-style" --set-prop "font-weight:600"
 """,
     )
     p.add_argument(
@@ -321,6 +489,40 @@ Examples:
         help="Remove all elements matching CSS selector (repeatable)",
     )
     p.add_argument(
+        "--apply-css-overrides",
+        action="store_true",
+        help=(
+            "Apply every entry in the CSS_OVERRIDES list (defined near the top "
+            "of this script) — replaces each selector's full declaration block "
+            "with the configured 'css' text"
+        ),
+    )
+    p.add_argument(
+        "--css-selector",
+        metavar="SELECTOR",
+        help=(
+            "CSS selector of the rule to modify in the <style> tag "
+            "(use with --remove-prop / --set-prop)"
+        ),
+    )
+    p.add_argument(
+        "--remove-prop",
+        metavar="PROP",
+        action="append",
+        default=[],
+        help="CSS property to remove from the rule matched by --css-selector (repeatable)",
+    )
+    p.add_argument(
+        "--set-prop",
+        metavar="PROP:VALUE",
+        action="append",
+        default=[],
+        help=(
+            "CSS property:value to set on the rule matched by --css-selector "
+            "(repeatable, format 'prop:value')"
+        ),
+    )
+    p.add_argument(
         "-o",
         "--output-dir",
         metavar="DIR",
@@ -335,9 +537,13 @@ Examples:
 
 
 def main() -> None:
-    _check_deps()
     parser = build_parser()
     args = parser.parse_args()
+
+    needs_css_edit = bool(
+        args.css_selector or args.remove_prop or args.set_prop or args.apply_css_overrides
+    )
+    _check_deps(need_cssutils=needs_css_edit)
 
     # Build ordered operation list
     ops: list = []
@@ -348,9 +554,48 @@ def main() -> None:
     for selector in args.remove_tag:
         ops.append((op_remove_tag, {"selector": selector}))
 
+    if args.apply_css_overrides:
+        if not CSS_OVERRIDES:
+            parser.error(
+                "--apply-css-overrides was given but CSS_OVERRIDES is empty — "
+                "add entries near the top of this script"
+            )
+        ops.append((op_apply_css_overrides, {"overrides": CSS_OVERRIDES}))
+
+    if args.remove_prop or args.set_prop:
+        if not args.css_selector:
+            parser.error("--remove-prop / --set-prop require --css-selector")
+
+    if args.css_selector:
+        if not (args.remove_prop or args.set_prop):
+            parser.error(
+                "--css-selector requires at least one of --remove-prop / --set-prop"
+            )
+
+        set_props = {}
+        for item in args.set_prop:
+            if ":" not in item:
+                parser.error(
+                    f"--set-prop must be in 'prop:value' format, got: '{item}'"
+                )
+            prop, _, value = item.partition(":")
+            set_props[prop.strip()] = value.strip()
+
+        ops.append(
+            (
+                op_modify_css_rule,
+                {
+                    "selector": args.css_selector,
+                    "remove": args.remove_prop,
+                    "set": set_props,
+                },
+            )
+        )
+
     if not ops:
         parser.error(
-            "No operations specified. Add --move-audio, --fix-suno-prompts, --remove-tag SELECTOR, etc."
+            "No operations specified. Add --move-audio, --fix-suno-prompts, "
+            "--remove-tag SELECTOR, --css-selector + --remove-prop/--set-prop, etc."
         )
 
     output_dir = Path(args.output_dir) if args.output_dir else None

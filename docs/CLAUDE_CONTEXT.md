@@ -173,6 +173,8 @@ Lesson cards auto-extract `<title>` from each HTML file; `LESSON_META` only over
 
 Post-processing DOM tool (BeautifulSoup). Run **after** `convert_md2html`.
 Operations are applied in sequence. Requires: `pip install beautifulsoup4`
+Requires (CSS-rule operations only — `--apply-css-overrides`, `--css-selector`):
+`pip install cssutils`
 
 **Invocation:**
 ```bash
@@ -194,8 +196,14 @@ python scripts/html_manipulator.py HTML_MUSIC/ --remove-tag "h1#_1"
 # Fix Suno prompt direction and strip SUNO_PROMPT markers
 python scripts/html_manipulator.py HTML_LESSONS/ --fix-suno-prompts
 
+# Apply all configured CSS_OVERRIDES (edit the list near the top of the script)
+python scripts/html_manipulator.py HTML_LESSONS/ --apply-css-overrides
+
+# One-off surgical CSS edit (no config needed)
+python scripts/html_manipulator.py HTML_LESSONS/ --css-selector "blockquote" --remove-prop "font-style"
+
 # Combine operations in a single pass (what sync.toml runs)
-python scripts/html_manipulator.py HTML_LESSONS/ --move-audio --fix-suno-prompts
+python scripts/html_manipulator.py HTML_LESSONS/ --move-audio --fix-suno-prompts --apply-css-overrides
 ```
 
 **Operations:**
@@ -223,6 +231,36 @@ rendering on that block, and strips the marker line from the code content.
 - Marker line (including its trailing newline) is removed from the code content via `re.sub`
 - Handles both single-text-node `<code>` blocks and syntax-highlighted (multi-child) blocks
 - Idempotent — safe to re-run; any existing `direction`/`text-align` in the inline style are stripped before re-appending
+
+`--apply-css-overrides`
+Applies every entry in the `CSS_OVERRIDES` list (config block near the top of
+`html_manipulator.py`) to every `<style>` tag in the file. This is the standard
+way to override styles `convert_md2html` generates.
+
+- Each entry is `{"selector": "...", "css": "..."}`, where `css` is the **entire
+  desired declaration block** for that selector — copy it straight out of DevTools
+  after toggling/editing properties until it looks right
+- Implemented via `op_modify_css_rule(..., replace_with=css)`, which uses `cssutils`
+  to parse the stylesheet's CSSOM and sets `rule.style.cssText = css` — properties
+  not present in the override are **dropped**, not left alone (whole-block
+  replacement, not a merge)
+- If a `selector` isn't found in any `<style>` tag, prints a warning and counts as
+  0 changes (so a typo in `CSS_OVERRIDES` doesn't silently no-op forever)
+- Applies to every `<style>` tag in the document and every rule matching that
+  selector (in case of duplicates)
+- Idempotent, but `cssutils` re-serializes the **entire** `<style>` block on write
+  — expect whitespace/formatting diffs across the whole stylesheet, not just the
+  touched rule
+- **Note:** `CSS_OVERRIDES` is a single shared list — running `--apply-css-overrides`
+  on `HTML_LESSONS/` and `HTML_MUSIC/` applies the *same* overrides to both. Fine
+  for global stylesheet tweaks (current use case); would need per-directory lists
+  if section-specific overrides are ever needed
+
+`--css-selector "SELECTOR" [--remove-prop PROP] [--set-prop "prop:value"]`
+One-off surgical CSS edit, no `CSS_OVERRIDES` config needed. `--remove-prop`
+removes a property from the matched rule; `--set-prop` sets/overrides one
+(`prop:value` format). Both repeatable. Requires `--css-selector`. Use
+`--apply-css-overrides` instead for anything meant to persist in `sync.toml`.
 
 **Lyrics card CSS** (injected once, idempotent via marker comment):
 ```css
@@ -261,8 +299,9 @@ python sync.py --list                   # print all available routines and their
 | `music` | convert music → post-process music | No |
 | `push` | git commit + push only | Yes |
 
-Post-process steps (`manipulate_lessons`, `manipulate_music`) run both
-`--move-audio` and `--fix-suno-prompts` in a single pass over each directory.
+Post-process steps (`manipulate_lessons`, `manipulate_music`) run
+`--move-audio`, `--fix-suno-prompts`, and `--apply-css-overrides`
+in a single pass over each directory.
 
 **`sync.toml` structure:**
 
@@ -394,6 +433,8 @@ GitHub Pages redeploys automatically on push to `main`.
 | Teaser prose threshold `> 100` chars | Automatically skips short headings/subtitles when extracting philosophy preview |
 | `ROOT = Path(__file__).parent.parent` | `generate_homepage.py` lives in `scripts/`; this resolves to project root regardless of working directory |
 | UTF-8 enforced in subprocesses | `sync.py` sets `PYTHONIOENCODING=utf-8` + `PYTHONUTF8=1` for all child processes — required on Windows for Arabic text |
+| Stylesheet overrides go in `CSS_OVERRIDES` | Config list at top of `html_manipulator.py`; applied via `--apply-css-overrides` (whole-block `cssutils` replacement, "copy final state from DevTools" workflow) — not inline styles, not appended override rules. Inline styles remain reserved for per-element fixes (e.g. `--fix-suno-prompts`) that can't be expressed as a global selector |
+| `CSS_OVERRIDES` is shared across sections | Same list applies to `HTML_LESSONS/` and `HTML_MUSIC/` — fine for global stylesheet tweaks; would need per-directory lists for section-specific overrides |
 
 ---
 
