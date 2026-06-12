@@ -919,6 +919,13 @@ span.linenos.special {
     margin: 0 !important;
     border-radius: 0 !important;
     border-top: none
+    }
+/* ── Suno prompt LTR override ──────────────────── */
+pre[data-suno-prompt] {
+    direction: ltr !important;
+    text-align: left !important;
+    line-height: 1.5;
+    font-family: var(--font-mono)
     }</style>
 </head>
 <body>
@@ -974,7 +981,7 @@ span.linenos.special {
 لِيَجِيءَ صَوْتُكَ نَاصِعاً تِبْيَانُهُ
 </code></pre></div>
 <h2 id="_3">البرومت المستخدم في سونو</h2>
-<pre style="direction: ltr; text-align: left; line-height: 1.5; font-family:monospace;"><code class="language-text" dir="ltr">genre: "heavy doom metal and dense psychedelic rock, "
+<pre data-suno-prompt="true"><code class="language-text" dir="ltr">genre: "heavy doom metal and dense psychedelic rock, "
 vocal: "buried classical Arabic chanting, "
 instrumentation: "fuzz bass and overwhelming low end, "
 production: "muddy mix and cluttered, "

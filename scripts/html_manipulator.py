@@ -71,6 +71,28 @@ _LYRICS_CARD_CSS_MARKER = (
     "/* ── Lyrics card (audio + verse block) ──────────────────── */"
 )
 
+# ── CSS injected for Suno-prompt blocks (--fix-suno-prompts) ────────────────
+#
+# convert_md2html's stylesheet has:
+#     pre:not(.codehilite pre) { direction: rtl; text-align: right; }
+# which has specificity (0,1,2). A plain `pre[data-suno-prompt]` rule is only
+# (0,1,1) and would lose to that base rule on specificity alone, regardless
+# of source order — hence `!important` on the two properties that actually
+# conflict (direction, text-align). line-height/font-family don't need it,
+# since nothing else at this specificity sets them.
+
+_SUNO_PROMPT_CSS = """
+    /* ── Suno prompt LTR override ──────────────────── */
+    pre[data-suno-prompt] {
+      direction: ltr !important;
+      text-align: left !important;
+      line-height: 1.5;
+      font-family: var(--font-mono);
+    }
+"""
+
+_SUNO_PROMPT_CSS_MARKER = "/* ── Suno prompt LTR override ──────────────────── */"
+
 # ── CSS overrides ─────────────────────────────────────────────────────────
 #
 # Each entry overrides a single CSS rule emitted by convert_md2html.
@@ -194,25 +216,25 @@ def op_remove_tag(soup, selector: str) -> int:
 def op_fix_suno_prompts(soup) -> int:
     """
     Find all <pre><code> blocks that contain the SUNO_PROMPT marker,
-    fix their direction/alignment for LTR rendering, and strip the
-    marker line from the code content.
+    mark them for LTR rendering, and strip the marker line from the
+    code content.
 
     Why two elements need touching:
 
       <code dir="ltr">
         The dir attribute goes on <code> so the text content itself
-        renders left-to-right.
+        renders left-to-right (this is a bidi/text-shaping concern,
+        not CSS, so it can't be handled via the stylesheet).
 
-      <pre style="direction: ltr; text-align: left;">
+      <pre data-suno-prompt>
         convert_md2html's stylesheet has a rule:
             pre:not(.codehilite pre) { direction: rtl; text-align: right; }
-        Stylesheet rules beat the dir attribute, so we must override
-        both properties with an inline style on <pre> (inline style
-        wins on specificity).  The override is appended to whatever
-        inline style is already present (e.g. "position: relative;")
-        so nothing is clobbered.  The operation is idempotent — if the
-        properties are already in the inline style they are removed
-        first before being re-added.
+        Setting just dir="ltr" on <code> isn't enough to flip layout,
+        since that stylesheet rule wins on specificity. Rather than an
+        inline style, we tag the element with a data attribute and let
+        the injected `_SUNO_PROMPT_CSS` rule (added via `_inject_css`)
+        override direction/text-align via !important. This is idempotent —
+        re-setting the same attribute is a no-op.
 
     Returns: number of blocks fixed.
     """
@@ -226,25 +248,11 @@ def op_fix_suno_prompts(soup) -> int:
         if "SUNO_PROMPT" not in code.get_text():
             continue
 
-        # 1. Set dir="ltr" on the <code> element.
+        # 1. Set dir="ltr" on the <code> element (bidi text shaping).
         code["dir"] = "ltr"
 
-        # 2. Override direction + text-align on the <pre> via inline style.
-        #    We must do this because the stylesheet rule:
-        #        pre:not(.codehilite pre) { direction: rtl; text-align: right; }
-        #    has higher specificity than the HTML dir attribute.
-        existing = pre.get("style", "")
-        # Strip any pre-existing direction / text-align declarations (idempotent).
-        stripped = re.sub(
-            r"\b(?:direction|text-align)\s*:[^;]+;?\s*", "", existing
-        ).strip()
-        base = stripped.rstrip(";").strip()
-        sep = "; " if base else ""
-        pre["style"] = (
-            base
-            + sep
-            + "direction: ltr; text-align: left; line-height: 1.5; font-family:monospace;"
-        )
+        # 2. Tag the <pre> so the injected stylesheet rule can target it.
+        pre["data-suno-prompt"] = "true"
 
         # 3. Strip the SUNO_PROMPT marker line (+ its trailing newline) from
         #    the code content.  Two cases:
@@ -265,6 +273,9 @@ def op_fix_suno_prompts(soup) -> int:
                     node.replace_with(cleaned)
 
         count += 1
+
+    if count:
+        _inject_css(soup, _SUNO_PROMPT_CSS_MARKER, _SUNO_PROMPT_CSS)
 
     return count
 

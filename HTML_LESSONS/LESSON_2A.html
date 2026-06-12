@@ -919,6 +919,13 @@ span.linenos.special {
     margin: 0 !important;
     border-radius: 0 !important;
     border-top: none
+    }
+/* ── Suno prompt LTR override ──────────────────── */
+pre[data-suno-prompt] {
+    direction: ltr !important;
+    text-align: left !important;
+    line-height: 1.5;
+    font-family: var(--font-mono)
     }</style>
 </head>
 <body>
@@ -1015,7 +1022,7 @@ span.linenos.special {
 <p>انسخ نص الأغنية أعلاه وضعه في <strong>خانة الكلمات (Lyrics)</strong> في سونو. لأن هذا الدرس يعالج ثلاث مشكلات مختلفة، قم بتوليد الأغنية <strong>بثلاثة محثات مختلفة</strong> لتسمع الفروق:</p>
 <h4 id="thin-hollow-dry">التجربة الأولى: اختبار الصوت النحيف — Thin / Hollow / Dry</h4>
 <p><strong>انسخ هذا المحث في خانة (Style of Music):</strong></p>
-<pre style="direction: ltr; text-align: left; line-height: 1.5; font-family:monospace;"><code dir="ltr">Lo-fi indie, old telephone vocal EQ, thin voice, acoustic guitar, missing low end
+<pre data-suno-prompt="true"><code dir="ltr">Lo-fi indie, old telephone vocal EQ, thin voice, acoustic guitar, missing low end
 
 </code></pre>
 <p><audio controls="" style="width:100%; margin:0;"><br/>
@@ -1023,7 +1030,7 @@ span.linenos.special {
 </audio></p>
 <h4 id="muddy-smeared">التجربة الثانية: اختبار الصوت الموحل — Muddy / Smeared</h4>
 <p><strong>انسخ هذا المحث في خانة (Style of Music):</strong></p>
-<pre style="direction: ltr; text-align: left; line-height: 1.5; font-family:monospace;"><code dir="ltr">Heavy dark rock, cluttered instruments, thick dense bass, muddy mix, wooly vocal, loud kick drum
+<pre data-suno-prompt="true"><code dir="ltr">Heavy dark rock, cluttered instruments, thick dense bass, muddy mix, wooly vocal, loud kick drum
 
 </code></pre>
 <p><audio controls="" style="width:100%; margin:0;"><br/>
@@ -1031,7 +1038,7 @@ span.linenos.special {
 </audio></p>
 <h4 id="harsh-sibilance">التجربة الثالثة: اختبار الصوت الحاد — Harsh / Sibilance</h4>
 <p><strong>انسخ هذا المحث في خانة (Style of Music):</strong></p>
-<pre style="direction: ltr; text-align: left; line-height: 1.5; font-family:monospace;"><code dir="ltr">Modern bright pop, boosted highs, sharp sibilant vocal, piercing cymbals
+<pre data-suno-prompt="true"><code dir="ltr">Modern bright pop, boosted highs, sharp sibilant vocal, piercing cymbals
 </code></pre>
 <p><audio controls="" style="width:100%; margin:0;"><br/>
 <source src="../audio/lessons/L2A/P3_Harsh_Sibilance_01.mp3" type="audio/mpeg"/><br/>

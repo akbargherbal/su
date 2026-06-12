@@ -919,6 +919,13 @@ span.linenos.special {
     margin: 0 !important;
     border-radius: 0 !important;
     border-top: none
+    }
+/* ── Suno prompt LTR override ──────────────────── */
+pre[data-suno-prompt] {
+    direction: ltr !important;
+    text-align: left !important;
+    line-height: 1.5;
+    font-family: var(--font-mono)
     }</style>
 </head>
 <body>
@@ -1054,28 +1061,28 @@ span.linenos.special {
 <hr/>
 <h4 id="monophonic-sparse">التجربة الأولى: الصوت الأحادي المتفرِّق — Monophonic / Sparse (المقطع الأول)</h4>
 <p><strong>المحث المطلوب في خانة (Style of Music):</strong></p>
-<pre style="direction: ltr; text-align: left; line-height: 1.5; font-family:monospace;"><code class="language-text" dir="ltr">genre: "unaccompanied traditional inshad."
+<pre data-suno-prompt="true"><code class="language-text" dir="ltr">genre: "unaccompanied traditional inshad."
 vocal: "dry. centered. male baritone. declamatory."
 instrumentation: "silent. no instruments."
 production: "dead acoustic room. zero reverb. mono."
 mood: "solemn. pure."
 </code></pre>
 <p><strong>قائمة الاستبعادات (Exclusions):</strong></p>
-<pre style="direction: ltr; text-align: left; line-height: 1.5; font-family:monospace;"><code class="language-text" dir="ltr">reverb, echo, delay, music, instruments, synthesizer, stereo width
+<pre data-suno-prompt="true"><code class="language-text" dir="ltr">reverb, echo, delay, music, instruments, synthesizer, stereo width
 </code></pre>
 <p><strong>ماذا ستلاحظ؟</strong><br/>
 سيكشف هذا المحث عيوب الأداء والوزن بجراحية تامة. الصوت جاف تماماً، يقف في المنتصف بلا رنين أو صدى يتسبب في تشتيت الحروف. المقطع الأول (<code>صَوْتاً أُحَادِيّاً بَدَا مُنْفَرِدَا</code>) يجسد الواقع الفعلي للتجربة.</p>
 <hr/>
 <h4 id="-cinematic-neo-tarab">التجربة الثانية: النيو-طرب السينمائي والتوزيع ثلاثي الأبعاد — Cinematic Neo-Tarab (اللزمة كحارس للوضوح)</h4>
 <p><strong>المحث المطلوب في خانة (Style of Music):</strong></p>
-<pre style="direction: ltr; text-align: left; line-height: 1.5; font-family:monospace;"><code class="language-text" dir="ltr">genre: "cinematic neo-tarab. modern arabic orchestral."
+<pre data-suno-prompt="true"><code class="language-text" dir="ltr">genre: "cinematic neo-tarab. modern arabic orchestral."
 vocal: "classical nasheed vocal style. authoritative declamatory male baritone. strict classical fusha pronunciation."
 instrumentation: "staccato oud. solo violin. wide stereo strings. minimal crisp frame drum."
 production: "wide stereo instrument panning. call and response lazma. uncluttered mix."
 mood: "noble. majestic. dramatic."
 </code></pre>
 <p><strong>قائمة الاستبعادات (Exclusions):</strong></p>
-<pre style="direction: ltr; text-align: left; line-height: 1.5; font-family:monospace;"><code class="language-text" dir="ltr">colloquial, dialect, english accent, contemporary pop vocals, breathy singing, slurred consonants, whispering, muddy, heavy synth pads, reverb wash
+<pre data-suno-prompt="true"><code class="language-text" dir="ltr">colloquial, dialect, english accent, contemporary pop vocals, breathy singing, slurred consonants, whispering, muddy, heavy synth pads, reverb wash
 </code></pre>
 <p><audio controls="" style="width:100%; margin:0;"><br/>
 <source src="../audio/lessons/L7/Cinematic_Neo-Tarab.mp3" type="audio/mpeg"/><br/>
@@ -1090,14 +1097,14 @@ mood: "noble. majestic. dramatic."
 <hr/>
 <h4 id="western-shift-dynamic-scaling">التجربة الثالثة: تفعيل الموسيقى الغربية بالوصف النشط — Western Shift &amp; Dynamic Scaling (حماية الفصحى من الانزلاق اللهجي)</h4>
 <p><strong>المحث المطلوب في خانة (Style of Music):</strong></p>
-<pre style="direction: ltr; text-align: left; line-height: 1.5; font-family:monospace;"><code class="language-text" dir="ltr">genre: "epic cinematic chamber folk. majestic neo-classical."
+<pre data-suno-prompt="true"><code class="language-text" dir="ltr">genre: "epic cinematic chamber folk. majestic neo-classical."
 vocal: "classical nasheed vocal style. authoritative declamatory male baritone. strict classical fusha pronunciation."
 instrumentation: "rich arpeggiated acoustic guitar. sweeping cello. layered chamber strings. driving organic percussion."
 production: "lush stereo backing. vocal-forward mix. clean separation. call and response lazma."
 mood: "noble. powerful. soaring."
 </code></pre>
 <p><strong>قائمة الاستبعادات (Exclusions):</strong></p>
-<pre style="direction: ltr; text-align: left; line-height: 1.5; font-family:monospace;"><code class="language-text" dir="ltr">colloquial, dialect, english accent, westernized pronunciation, contemporary pop vocals, breathy singing, slurred consonants, whispering, oud, kanun, darbuka, muddy, synth pads
+<pre data-suno-prompt="true"><code class="language-text" dir="ltr">colloquial, dialect, english accent, westernized pronunciation, contemporary pop vocals, breathy singing, slurred consonants, whispering, oud, kanun, darbuka, muddy, synth pads
 </code></pre>
 <p><audio controls="" style="width:100%; margin:0;"><br/>
 <source src="../audio/lessons/L7/The_Nasheed_Phonetic_Anchor.mp3" type="audio/mpeg"/><br/>
