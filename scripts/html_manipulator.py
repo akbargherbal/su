@@ -330,8 +330,8 @@ def op_modify_css_rule(
     Searches every <style> tag in the document and applies the change to
     every matching rule found (in case convert_md2html ever emits more
     than one <style> block or repeats a selector). If `selector` is not
-    found in any <style> tag, prints a warning and returns 0 — this is
-    intentional so a typo in a config entry doesn't silently no-op.
+    found in any <style> tag, and we have a `replace_with` block, it appends
+    it as a new rule to the first <style> tag.
 
     Idempotent: re-running with the same `replace_with`/`set`/`remove`
     produces an equivalent rule, though the stylesheet is re-serialized
@@ -383,9 +383,25 @@ def op_modify_css_rule(
             style_tag.string = sheet.cssText.decode("utf-8")
 
     if not found_anywhere:
-        print(
-            f"    [modify-css-rule] WARNING: selector '{selector}' not found in any <style> tag"
-        )
+        if replace_with is not None:
+            # If the rule wasn't found but we have a wholesale replacement,
+            # append it as a new rule to the first <style> tag.
+            style_tag = soup.find("style")
+            if style_tag:
+                current = style_tag.string or ""
+                style_tag.string = (
+                    current
+                    + f"\n/* ── Added via CSS override (idempotent) ── */\n{selector} {{\n{replace_with}\n}}\n"
+                )
+                changed += 1
+            else:
+                print(
+                    f"    [modify-css-rule] WARNING: No <style> tag found to append '{selector}'"
+                )
+        else:
+            print(
+                f"    [modify-css-rule] WARNING: selector '{selector}' not found in any <style> tag"
+            )
 
     return changed
 
