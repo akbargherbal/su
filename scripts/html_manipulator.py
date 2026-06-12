@@ -120,6 +120,24 @@ CSS_OVERRIDES = [
             color: var(--text-muted);
         """,
     },
+    {
+        "selector": 'pre[data-suno-prompt="true"] button',
+        "css": """
+            position: absolute;
+            top: 0.5rem;
+            right: 0.75rem;
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            font-family: var(--font-mono);
+            font-size: 0.72rem;
+            padding: 0.25rem 0.65rem;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.15s, color 0.15s;
+            z-index: 2;
+        """,
+    },
     # {
     #     "selector": "blockquote p",
     #     "css": """
@@ -552,7 +570,10 @@ def main() -> None:
     args = parser.parse_args()
 
     needs_css_edit = bool(
-        args.css_selector or args.remove_prop or args.set_prop or args.apply_css_overrides
+        args.css_selector
+        or args.remove_prop
+        or args.set_prop
+        or args.apply_css_overrides
     )
     _check_deps(need_cssutils=needs_css_edit)
 
