@@ -226,11 +226,11 @@ Finds all `<pre><code>` blocks containing the `SUNO_PROMPT` marker, forces LTR
 rendering on that block, and strips the marker line from the code content.
 
 - **Marker:** the literal string `SUNO_PROMPT` appearing as the first line of a fenced code block in the Markdown source — it is a build-time signal only and is never shown to readers
-- **`<code>`:** gets `dir="ltr"` so the text content renders left-to-right
-- **`<pre>`:** gets `direction: ltr; text-align: left;` appended as an inline style — necessary because the stylesheet rule `pre:not(.codehilite pre)` hard-codes `direction: rtl; text-align: right;`, which beats the HTML `dir` attribute; only inline style wins on specificity
+- **`<code>`:** gets `dir="ltr"` so the text content renders left-to-right (bidi/text-shaping)
+- **`<pre>`:** gets `data-suno-prompt="true"`. A small CSS block (`_SUNO_PROMPT_CSS`) is injected once, idempotently, into the file's `<style>` tag, targeting `pre[data-suno-prompt]` with `direction: ltr !important; text-align: left !important; line-height: 1.5; font-family: var(--font-mono);` — `!important` is required because the stylesheet rule `pre:not(.codehilite pre)` (specificity `(0,1,2)`) outranks a plain `pre[data-suno-prompt]` rule `(0,1,1)`
 - Marker line (including its trailing newline) is removed from the code content via `re.sub`
 - Handles both single-text-node `<code>` blocks and syntax-highlighted (multi-child) blocks
-- Idempotent — safe to re-run; any existing `direction`/`text-align` in the inline style are stripped before re-appending
+- Idempotent — safe to re-run; re-setting `data-suno-prompt` is a no-op, and `_inject_css` only injects the CSS block once (marker-comment guarded)
 
 `--apply-css-overrides`
 Applies every entry in the `CSS_OVERRIDES` list (config block near the top of
@@ -267,6 +267,11 @@ removes a property from the matched rule; `--set-prop` sets/overrides one
 .lyrics-card { border: 1px solid var(--border); border-radius: 10px; overflow: hidden; margin: 2rem 0; }
 .lyrics-card audio { display: block; width: 100%; background: var(--surface2); padding: 0.75rem 1rem; border-bottom: 1px solid var(--border); }
 .lyrics-card pre { margin: 0 !important; border-radius: 0 !important; border-top: none; }
+```
+
+**Suno prompt CSS** (injected once, idempotent via marker comment):
+```css
+pre[data-suno-prompt] { direction: ltr !important; text-align: left !important; line-height: 1.5; font-family: var(--font-mono); }
 ```
 
 ---
