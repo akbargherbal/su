@@ -94,8 +94,20 @@
 **انسخ هذا المحث في خانة (Style of Music):**
 
 ```text
-Maqam Hijaz, Arabic classical, oud solo, desert longing, modal, strong augmented second
+SUNO_PROMPT
+genre: "traditional Arabic sawt, Hijaz maqam, "
+vocal: "classical Fusha chanting, dry emotional solo male vocal, "
+instrumentation: "acoustic solo oud, antique wood block percussion, desert wind ambiance, "
+production: "untreated room acoustic, high vocal presence, "
+mood: "ancient longing, sand and stone atmosphere, ", ‑modern pop, ‑synthesizer, ‑autotune, ‑reverb wash, ‑major chord resolution, ‑percussion loops
 ```
+
+**Exclude**
+```text
+SUNO_PROMPT
+modern pop, synthesizer, autotune, reverb wash, major chord resolution, percussion loops
+```
+
 
 **ماذا ستلاحظ؟**  
 نقاء عالٍ في مخارج الحروف الفصحى، واستقرار نغمي تام لغياب الصدام مع الآلات الغربية. تظهر الثانية المعززة بوضوح شديد في المقطع الثاني، مطابقة للبيت: "وصوت الحجاز الحر".
@@ -109,7 +121,19 @@ Maqam Hijaz, Arabic classical, oud solo, desert longing, modal, strong augmented
 **انسخ هذا المحث في خانة (Style of Music):**
 
 ```text
-Progressive Oriental metal, dramatic operatic vocal, heavy electric guitar riffs, irregular drums
+SUNO_PROMPT
+genre: "oriental progressive metal. symphonic arabesque metal."
+vocal: "soaring passionate operatic Fusha vocal, dramatic and powerful."
+instrumentation: "heavy muscular electric guitar riffs playing maqam motifs, dramatic unison violins, pounding drums, deep electric bass."
+production: "wide stereo mix, explosive dynamic range, clean mastering."
+mood: "epic, heroic, intense, majestic."
+```
+
+
+**Exclusions:**
+```text
+SUNO_PROMPT
+acoustic acoustic, folk, lo-fi, whispering vocal, slow acoustic guitar, electronic trap beats
 ```
 
 **ماذا ستلاحظ؟ (النشاز والانزلاق الإيقاعي):**
@@ -126,6 +150,7 @@ Progressive Oriental metal, dramatic operatic vocal, heavy electric guitar riffs
 **انسخ هذا المحث في خانة (Style of Music):**
 
 ```text
+SUNO_PROMPT
 genre: "1970s Anatolian psychedelic rock, vintage alternative Arabesque."
 vocal: "expressive classical Fusha male vocal, retro vocal slapback echo, warm tape tone."
 instrumentation: "chorus-drenched electric guitar, unison oud and guitar melodic lines, warm analog bass, vintage open snare drum."
@@ -136,6 +161,7 @@ mood: "deeply nostalgic, hazy, cinematic, warm analog master."
 **انسخ هذه الاستثناءات في خانة (Exclude):**
 
 ```text
+SUNO_PROMPT
 bright modern digital production, synthesizer, autotune, heavy metal distortion, electronic drum machine, crisp high-end, rapid hi-hat loops
 ```
 

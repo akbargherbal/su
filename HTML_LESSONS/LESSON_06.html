@@ -900,6 +900,15 @@ span.linenos.special {
     color: #D19A66
     }
 /* Literal.Number.Integer.Long */
+/* ── Suno prompt LTR override ──────────────────── */
+pre[data-suno-prompt] {
+    direction: ltr !important;
+    text-align: left !important;
+    line-height: 1.5;
+    font-family: var(--font-mono);
+    position: relative;
+    /* Ensures the copy button aligns relative to this block */
+    }
 /* ── Added via CSS override (idempotent) ── */
 pre[data-suno-prompt="true"] button {
 
@@ -1014,7 +1023,14 @@ pre[data-suno-prompt="true"] button {
 <h4 id="the-pure-acoustic-baseline">التجربة الأولى: خط الأساس التقليدي — The Pure Acoustic Baseline</h4>
 <p>نهدف هنا إلى رصد الصوت المقامي الأصيل في بيئته الطبيعية دون أي مؤثرات حديثة، لعزل نبرة المقام بوضوح.</p>
 <p><strong>انسخ هذا المحث في خانة (Style of Music):</strong></p>
-<pre><code class="language-text">Maqam Hijaz, Arabic classical, oud solo, desert longing, modal, strong augmented second
+<pre data-suno-prompt="true"><code class="language-text" dir="ltr">genre: "traditional Arabic sawt, Hijaz maqam, "
+vocal: "classical Fusha chanting, dry emotional solo male vocal, "
+instrumentation: "acoustic solo oud, antique wood block percussion, desert wind ambiance, "
+production: "untreated room acoustic, high vocal presence, "
+mood: "ancient longing, sand and stone atmosphere, ", ‑modern pop, ‑synthesizer, ‑autotune, ‑reverb wash, ‑major chord resolution, ‑percussion loops
+</code></pre>
+<p><strong>Exclude</strong></p>
+<pre data-suno-prompt="true"><code class="language-text" dir="ltr">modern pop, synthesizer, autotune, reverb wash, major chord resolution, percussion loops
 </code></pre>
 <p><strong>ماذا ستلاحظ؟</strong><br/>
 نقاء عالٍ في مخارج الحروف الفصحى، واستقرار نغمي تام لغياب الصدام مع الآلات الغربية. تظهر الثانية المعززة بوضوح شديد في المقطع الثاني، مطابقة للبيت: “وصوت الحجاز الحر”.</p>
@@ -1022,7 +1038,14 @@ pre[data-suno-prompt="true"] button {
 <h4 id="the-western-grid-trap-scrap-metal">التجربة الثانية: فخ التصادم الغربي — The Western Grid Trap (Scrap Metal)</h4>
 <p>هنا نختبر “الحالة الفاشلة” لندرك خطورة إقحام آلات غربية حديثة ثقيلة دون تخطيط لغوي وفيزيائي لمجاراة الفصحى والمقامات.</p>
 <p><strong>انسخ هذا المحث في خانة (Style of Music):</strong></p>
-<pre><code class="language-text">Progressive Oriental metal, dramatic operatic vocal, heavy electric guitar riffs, irregular drums
+<pre data-suno-prompt="true"><code class="language-text" dir="ltr">genre: "oriental progressive metal. symphonic arabesque metal."
+vocal: "soaring passionate operatic Fusha vocal, dramatic and powerful."
+instrumentation: "heavy muscular electric guitar riffs playing maqam motifs, dramatic unison violins, pounding drums, deep electric bass."
+production: "wide stereo mix, explosive dynamic range, clean mastering."
+mood: "epic, heroic, intense, majestic."
+</code></pre>
+<p><strong>Exclusions:</strong></p>
+<pre data-suno-prompt="true"><code class="language-text" dir="ltr">acoustic acoustic, folk, lo-fi, whispering vocal, slow acoustic guitar, electronic trap beats
 </code></pre>
 <p><strong>ماذا ستلاحظ؟ (النشاز والانزلاق الإيقاعي):</strong></p>
 <ol>
@@ -1033,14 +1056,14 @@ pre[data-suno-prompt="true"] button {
 <h4 id="vintage-psych-cabinet-v20">التجربة الثالثة: الحل النهائي — كابينة السايكدلك العتيقة (Vintage Psych-Cabinet v2.0)</h4>
 <p>هذا هو الحل الهندسي المبتكر: دمج الآلات الغربية الحديثة (الجيتار الكهربائي) مع حماية هيبة الفصحى والمقامات الشرقية، وذلك باستخدام ذاكرة الروك الأناضولي والروك العربي البديل في السبعينات.</p>
 <p><strong>انسخ هذا المحث في خانة (Style of Music):</strong></p>
-<pre><code class="language-text">genre: "1970s Anatolian psychedelic rock, vintage alternative Arabesque."
+<pre data-suno-prompt="true"><code class="language-text" dir="ltr">genre: "1970s Anatolian psychedelic rock, vintage alternative Arabesque."
 vocal: "expressive classical Fusha male vocal, retro vocal slapback echo, warm tape tone."
 instrumentation: "chorus-drenched electric guitar, unison oud and guitar melodic lines, warm analog bass, vintage open snare drum."
 production: "spring reverb decay, analog tape saturation, rotary Leslie cabinet effect, vintage dynamic mic capture."
 mood: "deeply nostalgic, hazy, cinematic, warm analog master."
 </code></pre>
 <p><strong>انسخ هذه الاستثناءات في خانة (Exclude):</strong></p>
-<pre><code class="language-text">bright modern digital production, synthesizer, autotune, heavy metal distortion, electronic drum machine, crisp high-end, rapid hi-hat loops
+<pre data-suno-prompt="true"><code class="language-text" dir="ltr">bright modern digital production, synthesizer, autotune, heavy metal distortion, electronic drum machine, crisp high-end, rapid hi-hat loops
 </code></pre>
 <p><strong>ماذا ستلاحظ؟ (سر النجاح الفيزيائي والجمالي):</strong></p>
 <ol>
