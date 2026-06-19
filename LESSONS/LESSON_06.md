@@ -99,7 +99,7 @@ genre: "traditional Arabic sawt, Hijaz maqam, "
 vocal: "classical Fusha chanting, dry emotional solo male vocal, "
 instrumentation: "acoustic solo oud, antique wood block percussion, desert wind ambiance, "
 production: "untreated room acoustic, high vocal presence, "
-mood: "ancient longing, sand and stone atmosphere, ", ‑modern pop, ‑synthesizer, ‑autotune, ‑reverb wash, ‑major chord resolution, ‑percussion loops
+mood: "ancient longing, sand and stone atmosphere"
 ```
 
 **Exclude**
